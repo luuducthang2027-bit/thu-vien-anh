@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f5f8; --card:#fff; --ink:#0f172a; --ink2:#334155; --mute:#64748b; --line:#e2e8f0; --soft:#f8fafc;
+    --acc:#d71920; --acc-d:#b3141a; --acc-s:#fdeceb; --ok:#15803d; --ok-s:#e8f6ec; --warn:#b45309; --warn-s:#fff5e6; --info:#1d4ed8; --info-s:#eaf1fe;
+    --r:14px; --sh:0 1px 2px rgba(15,23,42,.05),0 2px 8px rgba(15,23,42,.05); --sh2:0 10px 30px rgba(15,23,42,.14);
+    --safe-b:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0}
+  body{font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(70px + var(--safe-b));-webkit-font-smoothing:antialiased}
+  svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px}
+  button{font:inherit;cursor:pointer}
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:15;background:var(--ink);color:#fff}
+  .hbar{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 14px}
+  .logo{width:36px;height:36px;border-radius:10px;background:var(--acc);display:flex;align-items:center;justify-content:center;flex:none}
+  .logo svg{width:20px;height:20px;stroke:#fff}
+  .brand{flex:1;min-width:0}
+  .brand h1{font-size:16px;margin:0;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand p{margin:0;font-size:12px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hbtn{height:36px;min-width:36px;padding:0 10px;border-radius:10px;border:1px solid #ffffff26;background:#ffffff0d;color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:600}
+  .hbtn:hover{background:#ffffff1f}
+  .hbtn.on{background:#16a34a33;border-color:#22c55e66;color:#bbf7d0}
+  .hbtn .lbl{display:none}
+  @media(min-width:640px){.hbtn .lbl{display:inline}}
+  .lang{position:relative}
+  .lang-menu{position:absolute;right:0;top:44px;background:#fff;color:var(--ink);border-radius:12px;box-shadow:var(--sh2);padding:6px;min-width:190px;display:none;z-index:30}
+  .lang-menu.on{display:block}
+  .lang-menu button{display:flex;width:100%;align-items:center;gap:10px;border:0;background:none;padding:10px 12px;border-radius:8px;text-align:left;font-size:14px;color:var(--ink)}
+  .lang-menu button:hover{background:var(--soft)}
+  .lang-menu button b{width:28px;font-size:12px;color:var(--mute)}
+  .lang-menu button.on{background:var(--acc-s);color:var(--acc);font-weight:600}
+  .lang-menu button.on b{color:var(--acc)}
+
+  /* ---------- nav: dưới (mobile) / trên (desktop) ---------- */
+  nav{position:fixed;bottom:0;left:0;right:0;z-index:14;background:#fff;border-top:1px solid var(--line);display:flex;padding-bottom:var(--safe-b);box-shadow:0 -2px 12px rgba(15,23,42,.05)}
+  nav button{flex:1;border:0;background:none;padding:8px 4px 9px;font-size:11.5px;font-weight:500;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
+  nav button svg.i{width:22px;height:22px}
+  nav button.on{color:var(--acc);font-weight:600}
+  nav button.on::before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:var(--acc)}
+  @media(min-width:900px){
+    body{padding-bottom:30px}
+    nav{position:sticky;top:56px;bottom:auto;box-shadow:none;border-top:0;border-bottom:1px solid var(--line);justify-content:center;gap:4px;padding:0 14px}
+    nav button{flex:none;flex-direction:row;font-size:14px;padding:12px 18px;gap:8px}
+    nav button svg.i{width:18px;height:18px}
+    nav button.on::before{top:auto;bottom:0;left:12px;right:12px;border-radius:3px 3px 0 0}
+  }
+
+  main{max-width:1120px;margin:0 auto;padding:16px 14px}
+  .view{display:none;animation:fade .2s ease}.view.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* ---------- form ---------- */
+  input,textarea,select{width:100%;font:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);transition:border .15s,box-shadow .15s}
+  @media(min-width:900px){input,textarea,select{font-size:14.5px}}
+  input:focus,textarea:focus,select:focus{outline:0;border-color:var(--acc);box-shadow:0 0 0 3px #d7192022}
+  input[readonly],textarea[readonly]{background:var(--soft);color:var(--ink2)}
+  textarea{min-height:96px;resize:vertical}
+  label.f{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin:12px 0 5px}
+  label.f .opt{font-weight:400;color:var(--mute)}
+  .req{color:var(--acc)}
+  .grid2{display:grid;grid-template-columns:1fr;gap:0 12px}
+  @media(min-width:640px){.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:2fr 2fr 1fr}}
+
+  .btn{border:0;border-radius:10px;padding:11px 16px;font-weight:600;font-size:14.5px;background:var(--acc);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background .15s,transform .05s}
+  .btn:hover{background:var(--acc-d)}.btn:active{transform:scale(.98)}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .btn.ghost:hover{background:var(--soft)}
+  .btn.dark{background:var(--ink)}.btn.dark:hover{background:#1e293b}
+  .btn.sm{padding:8px 12px;font-size:13px}
+  .btn.block{width:100%}
+  .btn:disabled{opacity:.5;pointer-events:none}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+  .ph-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .ph-head h3{margin:0;font-size:15.5px;font-weight:700;flex:1;display:flex;align-items:center;gap:8px}
+  .ph-head h3 svg.i{color:var(--acc)}
+  .hint{color:var(--mute);font-size:13px;margin:6px 0}
+  .muted{color:var(--mute)}
+
+  /* ---------- tra cứu ---------- */
+  .hero{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);border-radius:18px;padding:18px;color:#fff;margin-bottom:14px;box-shadow:var(--sh)}
+  .hero h2{margin:0 0 4px;font-size:18px;font-weight:700}
+  .hero p{margin:0 0 12px;color:#cbd5e1;font-size:13.5px}
+  .search{position:relative}
+  .search svg.i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mute);width:20px;height:20px}
+  .search input{padding-left:44px;height:50px;border-radius:12px;border:0;font-size:16px}
+  .search .clr{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:var(--soft);width:32px;height:32px;border-radius:50%;display:none;align-items:center;justify-content:center;color:var(--mute)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .chip{border:1px solid #ffffff30;background:#ffffff10;color:#e2e8f0;border-radius:20px;padding:6px 13px;font-size:13px;font-weight:500}
+  .chip.on{background:#fff;color:var(--ink);border-color:#fff}
+  .listbar{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 10px;font-size:13px;color:var(--mute)}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media(min-width:640px){.grid{grid-template-columns:repeat(3,1fr);gap:14px}}
+  @media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
+  @media(min-width:1100px){.grid{grid-template-columns:repeat(5,1fr)}}
+  .card{background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);cursor:pointer;display:flex;flex-direction:column;box-shadow:var(--sh);transition:transform .15s,box-shadow .15s}
+  .card:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+  .card .ph{aspect-ratio:4/3;background:var(--soft);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+  .card .ph img{width:100%;height:100%;object-fit:cover}
+  .card .cnt{position:absolute;right:8px;bottom:8px;background:#0f172acc;color:#fff;font-size:11px;font-weight:600;padding:3px 7px;border-radius:20px;display:flex;gap:4px;align-items:center}
+  .card .cnt svg.i{width:12px;height:12px}
+  .card .cnt.low{background:var(--acc)}
+  .card .tx{padding:10px 12px 12px}
+  .code{font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12px;color:var(--acc);font-weight:600;word-break:break-all;letter-spacing:.01em}
+  .name{font-weight:600;font-size:14px;margin-top:3px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .meta{font-size:12px;color:var(--mute);margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+  .badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:500;padding:3px 8px;border-radius:20px;background:#eef2f6;color:var(--ink2)}
+  .badge.red{background:var(--acc-s);color:var(--acc)}.badge.green{background:var(--ok-s);color:var(--ok)}
+  .empty{text-align:center;color:var(--mute);padding:48px 16px;grid-column:1/-1}
+  .empty svg.i{width:40px;height:40px;color:#cbd5e1;margin-bottom:8px}
+  .skel{background:linear-gradient(90deg,#eef2f6 25%,#f8fafc 50%,#eef2f6 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:var(--r);aspect-ratio:3/3.3}
+  @keyframes sk{to{background-position:-200% 0}}
+
+  /* ---------- ảnh ---------- */
+  .slots{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media(min-width:640px){.slots{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:900px){.slots{grid-template-columns:repeat(4,1fr)}.slot .pv{aspect-ratio:4/3}}
+  .slot{border:1.5px dashed #cbd5e1;border-radius:12px;background:var(--soft);display:flex;flex-direction:column;overflow:hidden;transition:border .15s}
+  .slot.done{border:1.5px solid #86efac;background:#fff}
+  .slot .pv{aspect-ratio:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:var(--mute);font-size:12.5px;text-align:center;padding:10px;position:relative;cursor:pointer}
+  .slot .pv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .slot .pv .ic{width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh);color:var(--acc);margin-bottom:4px}
+  .slot .pv b{color:var(--ink);font-size:13px}
+  .slot .t{font-size:12.5px;font-weight:600;padding:8px 10px 0;color:var(--ok);display:flex;gap:4px;align-items:center}
+  .slot .acts{display:flex;gap:6px;padding:0 8px 8px}
+  .slot .acts button{flex:1;white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 4px;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:4px;color:var(--ink2)}
+  .slot .acts button svg.i{width:14px;height:14px}
+  .slot .acts button.io{flex:0 0 38px}
+  .slot input.note,.slot select{border-radius:8px;padding:7px 9px;font-size:13px;margin:8px 8px 0;width:calc(100% - 16px)}
+  .slot input.note{margin-bottom:8px}
+  .slot.add{border-color:#f3a5a8;background:#fff8f8}
+  .x{position:absolute;top:6px;right:6px;z-index:2;width:30px;height:30px;border-radius:50%;border:0;background:#0f172acc;color:#fff;display:flex;align-items:center;justify-content:center;padding:0}
+  .x svg.i{width:15px;height:15px}
+  .exist{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  @media(min-width:640px){.exist{grid-template-columns:repeat(5,1fr)}}
+  .exist .it{position:relative;border-radius:10px;overflow:hidden;background:var(--soft);aspect-ratio:1;cursor:zoom-in}
+  .exist .it img{width:100%;height:100%;object-fit:cover}
+  .exist .it .lb2{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,#000b);color:#fff;font-size:11px;padding:12px 6px 4px}
+  .banner{padding:10px 12px;border-radius:10px;font-size:13.5px;margin:8px 0 2px;display:flex;gap:8px;align-items:flex-start}
+  .banner svg.i{margin-top:1px}
+  .banner.info{background:var(--info-s);color:var(--info)}.banner.warn{background:var(--warn-s);color:var(--warn)}.banner.ok{background:var(--ok-s);color:var(--ok)}
+  .checks{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  .prog{height:8px;background:#eef2f6;border-radius:8px;overflow:hidden;margin-top:12px;display:none}
+  .prog i{display:block;height:100%;width:0;background:var(--acc);transition:width .3s}
+  .savebar{position:sticky;bottom:calc(70px + var(--safe-b));z-index:5;background:#ffffffee;backdrop-filter:blur(6px);margin:0 -16px -16px;padding:12px 16px;border-top:1px solid var(--line);border-radius:0 0 var(--r) var(--r)}
+  @media(min-width:900px){.savebar{bottom:0}}
+
+  /* ---------- modal chi tiết ---------- */
+  .modal{position:fixed;inset:0;background:#0f172a99;z-index:40;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
+  .modal.on{display:flex}
+  .sheet{background:#fff;width:100%;max-width:860px;max-height:94vh;overflow:auto;border-radius:20px 20px 0 0;padding:0 0 calc(20px + var(--safe-b));position:relative;animation:up .22s ease}
+  @keyframes up{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}
+  @media(min-width:760px){.modal{align-items:center;padding:20px}.sheet{border-radius:20px;max-height:90vh}}
+  .sheet-h{position:sticky;top:0;z-index:3;background:#fff;padding:14px 16px 10px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+  .sheet-h .tt{flex:1;min-width:0}
+  .sheet-h h2{margin:2px 0 0;font-size:18px;line-height:1.3}
+  .sheet-b{padding:4px 16px 0}
+  .close{border:0;background:var(--soft);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink2)}
+  .grab{width:40px;height:4px;border-radius:4px;background:#cbd5e1;margin:8px auto 0}
+  @media(min-width:760px){.grab{display:none}}
+  .hero-img{margin:12px 0 0;border-radius:14px;overflow:hidden;background:var(--soft);aspect-ratio:4/3;max-height:52vh;width:100%;cursor:zoom-in}
+  .hero-img img{width:100%;height:100%;object-fit:contain;background:#f1f5f9}
+  .gal h4{margin:16px 0 8px;font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .gal .strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
+  .gal .strip div{flex:0 0 104px;height:104px;border-radius:10px;overflow:hidden;background:var(--soft);cursor:zoom-in;position:relative;scroll-snap-align:start;border:2px solid transparent}
+  .gal .strip div.sel{border-color:var(--acc)}
+  .gal .strip img{width:100%;height:100%;object-fit:cover}
+  .gal .strip small{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,#000b);color:#fff;font-size:10.5px;padding:10px 6px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .info{display:grid;grid-template-columns:1fr;gap:0;margin-top:16px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  @media(min-width:640px){.info{grid-template-columns:1fr 1fr}}
+  .info div{padding:10px 12px;border-bottom:1px solid var(--line);font-size:14px}
+  .info div span{display:block;font-size:11.5px;color:var(--mute);font-weight:500;text-transform:uppercase;letter-spacing:.03em}
+  .desc{white-space:pre-wrap;background:var(--soft);border-radius:12px;padding:12px 14px;margin-top:12px;font-size:14px;color:var(--ink2);border:1px solid var(--line)}
+  .trbar{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12.5px;color:var(--info)}
+  .trbar button{border:0;background:none;color:var(--info);text-decoration:underline;padding:0;font-size:12.5px}
+  .lb{position:fixed;inset:0;background:#000000f0;z-index:60;display:none;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+  .lb.on{display:flex}
+  .lb img{max-width:100%;max-height:84vh;object-fit:contain;border-radius:6px}
+  .lb p{color:#e2e8f0;font-size:13px;margin:10px 0 0;text-align:center}
+  .lb .close{position:absolute;top:14px;right:14px;background:#ffffff22;color:#fff}
+
+  /* ---------- tìm bằng ảnh ---------- */
+  .scan{text-align:center;padding:22px 16px}
+  .scan .big{width:76px;height:76px;border-radius:50%;background:var(--acc-s);color:var(--acc);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+  .scan .big svg.i{width:36px;height:36px}
+  .scan h3{margin:0 0 4px;font-size:17px}
+  .scan .row{display:flex;gap:10px;max-width:420px;margin:14px auto 0}
+  .scan .row .btn{flex:1}
+  .qprev{max-width:260px;width:100%;border-radius:14px;display:none;margin:14px auto 0;box-shadow:var(--sh)}
+  .res{display:flex;gap:12px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:10px;margin-top:10px;cursor:pointer;align-items:center;box-shadow:var(--sh);transition:box-shadow .15s}
+  .res:hover{box-shadow:var(--sh2)}
+  .res .ph{width:78px;height:78px;border-radius:10px;overflow:hidden;background:var(--soft);flex:none}
+  .res .ph img{width:100%;height:100%;object-fit:cover}
+  .res .sc{margin-left:auto;text-align:right;font-weight:700;font-size:18px;flex:none;padding-right:4px}
+  .bar{height:6px;border-radius:4px;background:#eef2f6;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;border-radius:4px}
+
+  /* ---------- import ---------- */
+  .imp-map{display:grid;grid-template-columns:repeat(2,1fr);gap:0 10px}
+  @media(min-width:640px){.imp-map{grid-template-columns:repeat(3,1fr)}}
+  .tbl{overflow:auto;margin-top:12px;border:1px solid var(--line);border-radius:10px;max-height:300px}
+  .tbl table{border-collapse:collapse;width:100%;font-size:13px}
+  .tbl th,.tbl td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+  .tbl th{background:var(--soft);position:sticky;top:0;font-weight:600;color:var(--ink2);font-size:12px}
+  .ck{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;margin-top:12px;color:var(--ink2)}
+  .ck input{width:18px;height:18px;margin:1px 0 0;flex:none;accent-color:var(--acc)}
+
+  .toast{position:fixed;left:50%;bottom:calc(86px + var(--safe-b));transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:14px;z-index:80;display:none;max-width:92%;box-shadow:var(--sh2);text-align:center}
+  @media(min-width:900px){.toast{bottom:30px}}
+  .sugw{position:relative}
+  .sug{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh2);z-index:12;display:none;max-height:60vh;overflow:auto}
+  .sug-h{font-size:12px;color:var(--mute);padding:8px 12px;border-bottom:1px solid var(--line);background:var(--soft)}
+  .sug button{display:flex;width:100%;align-items:center;gap:10px;border:0;border-bottom:1px solid var(--line);background:#fff;padding:10px 12px;text-align:left;color:var(--ink)}
+  .sug button:last-child{border-bottom:0}
+  .sug button:hover,.sug button.on{background:var(--acc-s)}
+  .sug-t{flex:1;min-width:0;display:flex;flex-direction:column}
+  .sug-n{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .spin{display:inline-block;width:16px;height:16px;border:2px solid #cbd5e1;border-top-color:var(--acc);border-radius:50%;animation:s .8s linear infinite;vertical-align:-3px;flex:none}
+  @keyframes s{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbar">
+    <div class="logo" data-ic="box"></div>
+    <div class="brand"><h1 data-i18n="app"></h1><p data-i18n="sub"></p></div>
+    <button class="hbtn" id="admBtn" onclick="adminToggle()"></button>
+    <button class="hbtn" onclick="reloadItems(true)" data-i18n-title="refresh"><span data-ic="refresh"></span></button>
+    <div class="lang">
+      <button class="hbtn" id="langBtn" onclick="event.stopPropagation();$('langMenu').classList.toggle('on')"><span data-ic="globe"></span><span id="langCur">VI</span></button>
+      <div class="lang-menu" id="langMenu">
+        <button data-l="vi" onclick="setLang('vi')"><b>VI</b>Tiếng Việt</button>
+        <button data-l="en" onclick="setLang('en')"><b>EN</b>English</button>
+        <button data-l="ht" onclick="setLang('ht')"><b>HT</b>Kreyòl ayisyen</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <button class="on" data-v="v-search" onclick="go('v-search')"><span data-ic="search"></span><span data-i18n="nav_search"></span></button>
+  <button data-v="v-photo" onclick="go('v-photo')"><span data-ic="scan"></span><span data-i18n="nav_photo"></span></button>
+  <button data-v="v-edit" onclick="go('v-edit')"><span data-ic="plusSq"></span><span data-i18n="nav_edit"></span></button>
+</nav>
+
+<main>
+  <!-- ========== TRA CỨU ========== -->
+  <section class="view on" id="v-search">
+    <div class="hero">
+      <h2 data-i18n="hero_t"></h2>
+      <p data-i18n="hero_p"></p>
+      <div class="search"><span data-ic="search"></span>
+        <input id="q" data-i18n-ph="q_ph" autocomplete="off" oninput="renderList()">
+        <button class="clr" id="qclr" onclick="$('q').value='';renderList();$('q').focus()"><span data-ic="x"></span></button>
+      </div>
+      <div class="chips" id="flt">
+        <button class="chip on" data-f="all" onclick="setFlt('all')" data-i18n="f_all"></button>
+        <button class="chip" data-f="lack" onclick="setFlt('lack')" data-i18n="f_lack"></button>
+        <button class="chip" data-f="none" onclick="setFlt('none')" data-i18n="f_none"></button>
+      </div>
+    </div>
+    <div class="listbar"><span id="listInfo"></span></div>
+    <div class="grid" id="list"></div>
+  </section>
+
+  <!-- ========== TÌM BẰNG ẢNH ========== -->
+  <section class="view" id="v-photo">
+    <div class="panel scan">
+      <div class="big" data-ic="camera"></div>
+      <h3 data-i18n="ps_title"></h3>
+      <div class="hint" data-i18n="ps_hint"></div>
+      <div class="row">
+        <button class="btn" onclick="pick({kind:'query'},true)"><span data-ic="camera"></span><span data-i18n="take"></span></button>
+        <button class="btn ghost" onclick="pick({kind:'query'},false)"><span data-ic="image"></span><span data-i18n="choose"></span></button>
+      </div>
+      <img id="qprev" class="qprev" alt="">
+      <div id="qstatus" class="hint"></div>
+    </div>
+    <div id="qres"></div>
+    <div class="panel" style="margin-top:16px">
+      <div class="ph-head"><h3><span data-ic="cpu"></span><span data-i18n="emb_title"></span></h3></div>
+      <div class="hint" id="embInfo">—</div>
+      <button class="btn ghost sm" id="embBtn" onclick="rebuildEmbeddings()" style="display:none" data-i18n="emb_btn"></button>
+    </div>
+  </section>
+
+  <!-- ========== THÊM / CẬP NHẬT ========== -->
+  <section class="view" id="v-edit">
+    <div class="panel" id="impPanel" style="display:none">
+      <div class="ph-head">
+        <h3><span data-ic="sheet"></span><span data-i18n="imp_title"></span></h3>
+        <button class="btn dark sm" onclick="pickImport()"><span data-ic="upload"></span><span data-i18n="imp_pick"></span></button>
+      </div>
+      <div class="hint" data-i18n="imp_hint"></div>
+      <div id="impBox" style="display:none"></div>
+    </div>
+
+    <div class="panel">
+      <div class="ph-head">
+        <h3><span data-ic="box"></span><span id="edTitle"></span></h3>
+        <button class="btn ghost sm" onclick="resetForm()"><span data-ic="plus"></span><span data-i18n="new_btn"></span></button>
+      </div>
+      <div id="edBanner"></div>
+      <div class="grid2">
+        <div><label class="f"><span data-i18n="f_code"></span> <span class="req">*</span></label>
+          <div class="sugw"><input id="f_code" data-i18n-ph="ph_code" onchange="onCodeChange()" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"></div></div>
+        <div><label class="f"><span data-i18n="f_name"></span> <span class="req">*</span></label>
+          <div class="sugw"><input id="f_name" data-i18n-ph="ph_name" autocomplete="off" autocorrect="off" spellcheck="false"></div></div>
+      </div>
+      <div class="grid2 grid3">
+        <div><label class="f"><span data-i18n="f_group"></span> <span class="opt" data-i18n="optional"></span></label><input id="f_group" data-i18n-ph="ph_group"></div>
+        <div><label class="f"><span data-i18n="f_model"></span> <span class="opt" data-i18n="optional"></span></label><input id="f_model" data-i18n-ph="ph_model"></div>
+        <div><label class="f"><span data-i18n="f_unit"></span></label><input id="f_unit" data-i18n-ph="ph_unit"></div>
+      </div>
+      <label class="f"><span data-i18n="f_desc"></span> <span class="opt" data-i18n="optional"></span></label>
+      <textarea id="f_desc" data-i18n-ph="f_desc_ph"></textarea>
+      <div class="grid2">
+        <div><label class="f" data-i18n="f_user"></label><input id="f_user" data-i18n-ph="f_user_ph" autocomplete="name"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="existPanel" style="display:none">
+      <div class="ph-head"><h3><span data-ic="image"></span><span data-i18n="exist_title"></span></h3></div>
+      <div class="exist" id="exist"></div>
+    </div>
+
+    <div class="panel">
+      <div class="ph-head"><h3><span data-ic="camera"></span><span data-i18n="req_title"></span> <span class="req">*</span></h3></div>
+      <div class="hint" data-i18n="req_hint"></div>
+      <div class="slots" id="slots"></div>
+      <div class="ph-head" style="margin-top:18px"><h3><span data-ic="plusSq"></span><span data-i18n="extra_title"></span></h3></div>
+      <div class="slots" id="extras"></div>
+      <div class="savebar">
+        <div class="checks" id="checks" style="margin:0 0 10px"></div>
+        <div class="prog" id="prog"><i></i></div>
+        <div class="hint" id="saveMsg"></div>
+        <button class="btn block" id="saveBtn" style="padding:14px" onclick="save()"><span data-ic="save"></span><span data-i18n="save_btn"></span></button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="detail" onclick="if(event.target===this)closeDetail()"><div class="sheet" id="detailBody"></div></div>
+<div class="lb" id="lb" onclick="this.classList.remove('on')"><button class="close"><span data-ic="x"></span></button><img id="lbImg" alt=""><p id="lbCap"></p></div>
+
+<div class="modal" id="admModal" onclick="if(event.target===this)this.classList.remove('on')"><div class="sheet" style="max-width:400px">
+  <div class="grab"></div>
+  <div class="sheet-h"><div class="tt"><h2 data-i18n="adm_title"></h2></div><button class="close" onclick="$('admModal').classList.remove('on')"><span data-ic="x"></span></button></div>
+  <div class="sheet-b">
+    <div class="hint" data-i18n="adm_hint"></div>
+    <label class="f" data-i18n="adm_pass"></label>
+    <input id="admPass" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')adminLogin()">
+    <div class="hint" id="admMsg"></div>
+    <button class="btn block" style="margin-top:6px" onclick="adminLogin()"><span data-ic="lock"></span><span data-i18n="adm_login"></span></button>
+  </div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<input type="file" id="fileCam" accept="image/*" capture="environment" hidden>
+<input type="file" id="filePick" accept="image/*" multiple hidden>
+<input type="file" id="fileImp" accept=".xls,.xlsx,.xlsm,.csv" hidden>
+
+<script>
+/* =================== BIỂU TƯỢNG =================== */
+const ICONS = {
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  camera:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/>',
+  image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  plusSq:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/>',
+  refresh:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+  lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  unlock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
+  globe:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+  upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5M12 3v12"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  box:'<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/>',
+  save:'<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/>',
+  sheet:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8M10 9H8"/>',
+  scan:'<path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3.5"/>',
+  cpu:'<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  alert:'<path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3z"/><path d="M12 9v4M12 17h.01"/>',
+  lang:'<path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/>'
+};
+function ic(n){ return '<svg class="i" viewBox="0 0 24 24">'+(ICONS[n]||'')+'</svg>'; }
+
+/* =================== NGÔN NGỮ =================== */
+const I18N = {
+vi:{
+  app:'Thư viện ảnh thiết bị', sub:'Tra cứu hình ảnh & mã hàng', refresh:'Làm mới',
+  nav_search:'Tra cứu', nav_photo:'Tìm bằng ảnh', nav_edit:'Thêm / cập nhật',
+  admin:'Admin', admin_on:'Admin', hero_t:'Tra cứu thiết bị', hero_p:'Gõ mã hàng hoặc tên để xem ảnh, mô tả và cách nhận biết thiết bị.',
+  q_ph:'Nhập mã hàng hoặc tên thiết bị…', f_all:'Tất cả', f_lack:'Chưa đủ 3 ảnh', f_none:'Chưa có ảnh',
+  loading:'Đang tải…', list_total:'{n} mã hàng', list_found:'Hiển thị {a} / {b} mã hàng',
+  list_empty_db:'Chưa có thiết bị nào. Vào “Thêm / cập nhật” để nhập.', list_none:'Không tìm thấy. Thử từ khóa khác hoặc dùng “Tìm bằng ảnh”.',
+  load_err:'Lỗi tải dữ liệu: ', refreshed:'Đã làm mới: {n} mã hàng', photos_n:'{n} ảnh',
+  t_SERIAL:'Serial / nhãn', t_TONGQUAN:'Tổng quan', t_CHITIET:'Chi tiết', t_KHAC:'Khác',
+  h_SERIAL:'Tem nhãn có tên, model, S/N', h_TONGQUAN:'Toàn bộ thiết bị', h_CHITIET:'Cổng, đầu nối, mặt sau…',
+  d_code:'Mã hàng', d_name:'Tên hàng', d_group:'Nhóm / loại', d_model:'Hãng / Model', d_unit:'Đơn vị tính', d_updated:'Cập nhật lần cuối', d_desc:'Mô tả',
+  d_noimg:'Thiết bị này chưa có ảnh.', d_edit:'Cập nhật / thêm ảnh', d_notfound:'Không tìm thấy mã {c}',
+  auto_tr:'Bản dịch tự động', show_orig:'Xem bản gốc', show_tr:'Xem bản dịch', translating:'Đang dịch…',
+  ps_title:'Chụp thiết bị để nhận dạng', ps_hint:'Chụp gần, đủ sáng, thiết bị chiếm phần lớn khung hình, nền càng đơn giản càng tốt.',
+  take:'Chụp ảnh', choose:'Chọn ảnh', ps_analyzing:'Đang phân tích ảnh… (lần đầu cần tải mô hình ~15MB)', ps_compare:'Đang so sánh với thư viện…',
+  ps_empty:'Thư viện chưa có ảnh nào có dữ liệu nhận dạng.', ps_result:'Kết quả gần giống nhất — bấm để xem chi tiết. Hãy đối chiếu thêm với tem nhãn / serial.', ps_high:'Khớp cao',
+  emb_title:'Dữ liệu nhận dạng', emb_missing:'{n} ảnh chưa có dữ liệu nhận dạng.', emb_all:'Tất cả ảnh đều đã có dữ liệu nhận dạng.',
+  emb_btn:'Tính dữ liệu nhận dạng cho ảnh cũ', emb_prog:'Đang xử lý {a}/{b} ({c})…', emb_done:'Đã xử lý {n} ảnh', err:'Lỗi: ',
+  imp_title:'Import từ file tổng nhập', imp_pick:'Chọn file Excel',
+  imp_hint:'File Import_Summary (.xls / .xlsx / .csv): lấy mã hàng, tên hàng, ĐVT đưa vào thư viện. Mã đã có sẽ không bị tạo trùng.',
+  imp_reading:'Đang đọc file {f}…', imp_bad:'Không đọc được file: ', imp_info:'File {f} — {n} dòng. Kiểm tra lại các cột trước khi import.',
+  imp_sheet:'Sheet', imp_hdr:'Dòng tiêu đề', imp_ccode:'Cột mã hàng', imp_cname:'Cột tên hàng', imp_cunit:'Cột ĐVT', imp_cgroup:'Cột nhóm / loại', imp_none:'— Không lấy —',
+  imp_count:'{n} mã (đã lọc trùng)', imp_new:'{n} mã mới', imp_have:'{n} mã đã có', st_new:'Mới', st_have:'Đã có', th_status:'Trạng thái', imp_more:'… và {n} mã nữa',
+  imp_over:'Ghi đè tên / ĐVT / nhóm của mã đã có (mặc định chỉ điền vào ô còn trống)', imp_btn:'Import {n} mã vào thư viện', imp_prog:'Đang import {a}/{b}…',
+  imp_done:'Xong: thêm mới {a}, cập nhật {u}, giữ nguyên {s}.', imp_retry:' — bấm Import lại, mã đã vào sẽ không bị tạo trùng.', imp_toast:'Import xong: {n} mã mới', need_admin:'Cần đăng nhập Admin',
+  ed_new:'Thêm thiết bị mới', ed_upd:'Cập nhật: {c}', new_btn:'Mới',
+  f_code:'Mã hàng', f_name:'Tên hàng', f_group:'Nhóm / loại', f_model:'Hãng / Model', f_unit:'ĐVT', optional:'(không bắt buộc)',
+  f_desc:'Mô tả chi tiết', f_desc_ph:'Công dụng, thông số, cách nhận biết, vị trí lắp đặt…', f_user:'Người cập nhật', f_user_ph:'Họ tên',
+  ph_code:'VD: ZTE-RRU-8862', ph_name:'Tên thiết bị', ph_group:'RRU, Anten, Nguồn, Cáp…', ph_model:'VD: ZTE ZXSDR R8862A', ph_unit:'Cái',
+  exist_title:'Ảnh đã lưu', req_title:'Ảnh bắt buộc', req_hint:'Tối thiểu 3 ảnh: Serial / nhãn, Tổng quan, Chi tiết.', extra_title:'Ảnh bổ sung',
+  has_saved:'Đã có ảnh — có thể chụp thêm', add_photo:'Thêm ảnh', multi:'chọn được nhiều ảnh', note_ph:'Ghi chú ảnh…',
+  save_btn:'Lưu thiết bị & tải ảnh', saving_info:'Đang lưu thông tin…', uploading:'Đang tải ảnh {a}/{b}…',
+  saved_new:'Đã thêm {c} ({n} ảnh mới)', saved_upd:'Đã cập nhật {c} ({n} ảnh mới)', no_emb:' — {n} ảnh chưa có dữ liệu nhận dạng',
+  save_err:' — ảnh chưa tải vẫn giữ trên form, bấm Lưu lại để thử tiếp.', need_code:'Nhập mã hàng', need_name:'Nhập tên hàng',
+  miss_photo:'Còn thiếu ảnh: {l}', max_img:'Tối đa {n} ảnh / mã hàng', photos_count:'{a}/{b} ảnh',
+  ban_admin:'Mã này đã có trong thư viện — bạn (Admin) có thể sửa thông tin, thêm hoặc xóa ảnh.',
+  ban_user:'Mã này đã có trong thư viện — bạn có thể thêm ảnh mới. Chỉ Admin được sửa thông tin đã có và xóa ảnh.',
+  sug_head:'{n} mã đã có trong thư viện — chọn để xem / thêm ảnh', sug_none:'Chưa có trong thư viện — sẽ tạo mã mới',
+  exist_loading:'Mã đã tồn tại, đang tải dữ liệu cũ…', del_confirm:'Xóa ảnh "{t}" này? (File chuyển vào thùng rác Drive)', deleted:'Đã xóa ảnh', bad_img:'Không đọc được ảnh',
+  adm_title:'Đăng nhập Admin', adm_hint:'Admin được: import file tổng nhập, sửa thông tin mã đã có, xóa ảnh.', adm_pass:'Mật khẩu', adm_login:'Đăng nhập',
+  adm_checking:'Đang kiểm tra…', adm_wrong:'Sai mật khẩu', adm_ok:'Đã đăng nhập Admin', adm_out:'Đã thoát quyền Admin', adm_exit:'Thoát Admin'
+},
+en:{
+  app:'Equipment Photo Library', sub:'Visual lookup of item codes', refresh:'Refresh',
+  nav_search:'Search', nav_photo:'Photo search', nav_edit:'Add / update',
+  admin:'Admin', admin_on:'Admin', hero_t:'Find equipment', hero_p:'Type an item code or name to see photos, description and how to recognize the equipment.',
+  q_ph:'Enter item code or equipment name…', f_all:'All', f_lack:'Under 3 photos', f_none:'No photos',
+  loading:'Loading…', list_total:'{n} items', list_found:'Showing {a} of {b} items',
+  list_empty_db:'No equipment yet. Go to “Add / update” to enter some.', list_none:'Nothing found. Try another keyword or use “Photo search”.',
+  load_err:'Error loading data: ', refreshed:'Refreshed: {n} items', photos_n:'{n} photos',
+  t_SERIAL:'Serial / label', t_TONGQUAN:'Overview', t_CHITIET:'Detail', t_KHAC:'Other',
+  h_SERIAL:'Label showing name, model, S/N', h_TONGQUAN:'The whole unit', h_CHITIET:'Ports, connectors, back side…',
+  d_code:'Item code', d_name:'Item name', d_group:'Group / type', d_model:'Brand / Model', d_unit:'Unit', d_updated:'Last updated', d_desc:'Description',
+  d_noimg:'This equipment has no photos yet.', d_edit:'Update / add photos', d_notfound:'Item {c} not found',
+  auto_tr:'Automatic translation', show_orig:'Show original', show_tr:'Show translation', translating:'Translating…',
+  ps_title:'Take a photo to identify equipment', ps_hint:'Shoot close up in good light, fill the frame with the equipment, keep the background simple.',
+  take:'Take photo', choose:'Choose photo', ps_analyzing:'Analyzing photo… (first time downloads a ~15MB model)', ps_compare:'Comparing with the library…',
+  ps_empty:'No photos in the library have recognition data yet.', ps_result:'Closest matches — tap to see details. Always double-check the label / serial.', ps_high:'Strong match',
+  emb_title:'Recognition data', emb_missing:'{n} photos have no recognition data.', emb_all:'All photos have recognition data.',
+  emb_btn:'Build recognition data for older photos', emb_prog:'Processing {a}/{b} ({c})…', emb_done:'Processed {n} photos', err:'Error: ',
+  imp_title:'Import from receiving summary', imp_pick:'Choose Excel file',
+  imp_hint:'Import_Summary file (.xls / .xlsx / .csv): adds item codes, names and units to the library. Existing codes are never duplicated.',
+  imp_reading:'Reading {f}…', imp_bad:'Cannot read file: ', imp_info:'File {f} — {n} rows. Check the columns before importing.',
+  imp_sheet:'Sheet', imp_hdr:'Header row', imp_ccode:'Item code column', imp_cname:'Item name column', imp_cunit:'Unit column', imp_cgroup:'Group / type column', imp_none:'— None —',
+  imp_count:'{n} codes (duplicates removed)', imp_new:'{n} new', imp_have:'{n} existing', st_new:'New', st_have:'Exists', th_status:'Status', imp_more:'… and {n} more',
+  imp_over:'Overwrite name / unit / group of existing codes (default: only fill empty fields)', imp_btn:'Import {n} codes into the library', imp_prog:'Importing {a}/{b}…',
+  imp_done:'Done: {a} added, {u} updated, {s} unchanged.', imp_retry:' — click Import again; already imported codes will not be duplicated.', imp_toast:'Import finished: {n} new codes', need_admin:'Admin login required',
+  ed_new:'Add new equipment', ed_upd:'Update: {c}', new_btn:'New',
+  f_code:'Item code', f_name:'Item name', f_group:'Group / type', f_model:'Brand / Model', f_unit:'Unit', optional:'(optional)',
+  f_desc:'Detailed description', f_desc_ph:'Purpose, specifications, how to recognize it, where it is installed…', f_user:'Updated by', f_user_ph:'Full name',
+  ph_code:'e.g. ZTE-RRU-8862', ph_name:'Equipment name', ph_group:'RRU, Antenna, Power, Cable…', ph_model:'e.g. ZTE ZXSDR R8862A', ph_unit:'Pcs',
+  exist_title:'Saved photos', req_title:'Required photos', req_hint:'At least 3 photos: Serial / label, Overview, Detail.', extra_title:'Additional photos',
+  has_saved:'Already has a photo — you can add more', add_photo:'Add photos', multi:'multiple allowed', note_ph:'Photo note…',
+  save_btn:'Save equipment & upload photos', saving_info:'Saving information…', uploading:'Uploading photo {a}/{b}…',
+  saved_new:'Added {c} ({n} new photos)', saved_upd:'Updated {c} ({n} new photos)', no_emb:' — {n} photos without recognition data',
+  save_err:' — photos not yet uploaded stay on the form; click Save again to retry.', need_code:'Enter the item code', need_name:'Enter the item name',
+  miss_photo:'Missing photos: {l}', max_img:'Maximum {n} photos per item', photos_count:'{a}/{b} photos',
+  ban_admin:'This code is already in the library — as Admin you can edit details, add or delete photos.',
+  ban_user:'This code is already in the library — you can add new photos. Only Admin can edit existing details or delete photos.',
+  sug_head:'{n} matching items in the library — pick one to view / add photos', sug_none:'Not in the library yet — a new item will be created',
+  exist_loading:'Code exists, loading saved data…', del_confirm:'Delete this "{t}" photo? (The file goes to Drive trash)', deleted:'Photo deleted', bad_img:'Cannot read the image',
+  adm_title:'Admin login', adm_hint:'Admin can: import the receiving summary, edit existing items, delete photos.', adm_pass:'Password', adm_login:'Log in',
+  adm_checking:'Checking…', adm_wrong:'Wrong password', adm_ok:'Logged in as Admin', adm_out:'Logged out of Admin', adm_exit:'Exit Admin'
+},
+ht:{
+  app:'Bibliyotèk foto ekipman', sub:'Chèche kòd atik ak foto', refresh:'Rafrechi',
+  nav_search:'Chèche', nav_photo:'Chèche ak foto', nav_edit:'Ajoute / mete ajou',
+  admin:'Admin', admin_on:'Admin', hero_t:'Chèche yon ekipman', hero_p:'Tape kòd atik la oswa non an pou wè foto, deskripsyon ak kijan pou rekonèt ekipman an.',
+  q_ph:'Antre kòd atik oswa non ekipman…', f_all:'Tout', f_lack:'Mwens pase 3 foto', f_none:'Pa gen foto',
+  loading:'Ap chaje…', list_total:'{n} atik', list_found:'{a} sou {b} atik',
+  list_empty_db:'Poko gen ekipman. Ale nan “Ajoute / mete ajou” pou antre youn.', list_none:'Pa jwenn anyen. Eseye yon lòt mo oswa itilize “Chèche ak foto”.',
+  load_err:'Erè pandan chajman: ', refreshed:'Rafrechi: {n} atik', photos_n:'{n} foto',
+  t_SERIAL:'Seri / etikèt', t_TONGQUAN:'Vi jeneral', t_CHITIET:'Detay', t_KHAC:'Lòt',
+  h_SERIAL:'Etikèt ak non, modèl, S/N', h_TONGQUAN:'Tout aparèy la', h_CHITIET:'Pò, konektè, dèyè aparèy la…',
+  d_code:'Kòd atik', d_name:'Non atik', d_group:'Gwoup / kalite', d_model:'Mak / Modèl', d_unit:'Inite', d_updated:'Dènye mizajou', d_desc:'Deskripsyon',
+  d_noimg:'Ekipman sa a poko gen foto.', d_edit:'Mete ajou / ajoute foto', d_notfound:'Pa jwenn atik {c}',
+  auto_tr:'Tradiksyon otomatik', show_orig:'Wè orijinal la', show_tr:'Wè tradiksyon an', translating:'Ap tradui…',
+  ps_title:'Pran yon foto pou idantifye ekipman an', ps_hint:'Pran foto a de pre, ak bon limyè, ekipman an dwe ranpli kad la, ak yon fon ki senp.',
+  take:'Pran foto', choose:'Chwazi foto', ps_analyzing:'Ap analize foto a… (premye fwa a ap telechaje yon modèl ~15MB)', ps_compare:'Ap konpare ak bibliyotèk la…',
+  ps_empty:'Poko gen foto nan bibliyotèk la ki gen done rekonesans.', ps_result:'Sa ki pi sanble yo — peze pou wè detay. Toujou verifye etikèt / nimewo seri a.', ps_high:'Sanble anpil',
+  emb_title:'Done rekonesans', emb_missing:'{n} foto pa gen done rekonesans.', emb_all:'Tout foto gen done rekonesans.',
+  emb_btn:'Kalkile done rekonesans pou ansyen foto', emb_prog:'Ap trete {a}/{b} ({c})…', emb_done:'Trete {n} foto', err:'Erè: ',
+  imp_title:'Enpòte depi rezime antre stòk', imp_pick:'Chwazi fichye Excel',
+  imp_hint:'Fichye Import_Summary (.xls / .xlsx / .csv): ajoute kòd, non ak inite atik yo nan bibliyotèk la. Kòd ki deja la pap double.',
+  imp_reading:'Ap li {f}…', imp_bad:'Pa ka li fichye a: ', imp_info:'Fichye {f} — {n} liy. Verifye kolòn yo anvan ou enpòte.',
+  imp_sheet:'Fèy', imp_hdr:'Liy tit', imp_ccode:'Kolòn kòd atik', imp_cname:'Kolòn non atik', imp_cunit:'Kolòn inite', imp_cgroup:'Kolòn gwoup / kalite', imp_none:'— Okenn —',
+  imp_count:'{n} kòd (san doub)', imp_new:'{n} nouvo', imp_have:'{n} ki deja la', st_new:'Nouvo', st_have:'Deja la', th_status:'Estati', imp_more:'… ak {n} lòt',
+  imp_over:'Ranplase non / inite / gwoup kòd ki deja la (pa defo: ranpli sèlman chan ki vid)', imp_btn:'Enpòte {n} kòd nan bibliyotèk la', imp_prog:'Ap enpòte {a}/{b}…',
+  imp_done:'Fini: {a} ajoute, {u} mete ajou, {s} san chanjman.', imp_retry:' — peze Enpòte ankò; kòd ki deja antre yo pap double.', imp_toast:'Enpòtasyon fini: {n} nouvo kòd', need_admin:'Fòk ou konekte kòm Admin',
+  ed_new:'Ajoute nouvo ekipman', ed_upd:'Mete ajou: {c}', new_btn:'Nouvo',
+  f_code:'Kòd atik', f_name:'Non atik', f_group:'Gwoup / kalite', f_model:'Mak / Modèl', f_unit:'Inite', optional:'(pa obligatwa)',
+  f_desc:'Deskripsyon detaye', f_desc_ph:'Itilizasyon, karakteristik, kijan pou rekonèt li, kote li enstale…', f_user:'Moun ki mete ajou', f_user_ph:'Non konplè',
+  ph_code:'Egz: ZTE-RRU-8862', ph_name:'Non ekipman', ph_group:'RRU, Antèn, Kouran, Kab…', ph_model:'Egz: ZTE ZXSDR R8862A', ph_unit:'Pyès',
+  exist_title:'Foto ki anrejistre', req_title:'Foto obligatwa', req_hint:'Omwen 3 foto: Seri / etikèt, Vi jeneral, Detay.', extra_title:'Lòt foto',
+  has_saved:'Gen foto deja — ou ka ajoute plis', add_photo:'Ajoute foto', multi:'plizyè posib', note_ph:'Nòt sou foto a…',
+  save_btn:'Anrejistre ekipman & voye foto', saving_info:'Ap anrejistre enfòmasyon…', uploading:'Ap voye foto {a}/{b}…',
+  saved_new:'Ajoute {c} ({n} nouvo foto)', saved_upd:'Mete ajou {c} ({n} nouvo foto)', no_emb:' — {n} foto san done rekonesans',
+  save_err:' — foto ki poko voye yo rete sou fòm nan; peze Anrejistre ankò.', need_code:'Antre kòd atik la', need_name:'Antre non atik la',
+  miss_photo:'Foto ki manke: {l}', max_img:'Maksimòm {n} foto pou chak atik', photos_count:'{a}/{b} foto',
+  ban_admin:'Kòd sa a deja nan bibliyotèk la — kòm Admin ou ka modifye enfòmasyon, ajoute oswa efase foto.',
+  ban_user:'Kòd sa a deja nan bibliyotèk la — ou ka ajoute nouvo foto. Se sèlman Admin ki ka modifye enfòmasyon oswa efase foto.',
+  sug_head:'{n} atik ki deja nan bibliyotèk la — chwazi youn pou wè / ajoute foto', sug_none:'Poko nan bibliyotèk la — y ap kreye yon nouvo atik',
+  exist_loading:'Kòd la egziste, ap chaje done yo…', del_confirm:'Efase foto "{t}" sa a? (Fichye a ale nan poubèl Drive)', deleted:'Foto efase', bad_img:'Pa ka li imaj la',
+  adm_title:'Koneksyon Admin', adm_hint:'Admin ka: enpòte rezime antre stòk, modifye atik ki deja la, efase foto.', adm_pass:'Modpas', adm_login:'Konekte',
+  adm_checking:'Ap verifye…', adm_wrong:'Move modpas', adm_ok:'Konekte kòm Admin', adm_out:'Dekonekte Admin', adm_exit:'Soti Admin'
+}};
+let LANG = 'vi';
+function t(k, v){ let s = (I18N[LANG] && I18N[LANG][k]) || I18N.vi[k] || k; if(v) for(const x in v) s = s.split('{'+x+'}').join(v[x]); return s; }
+function TL(type){ return t('t_'+type); }
+function applyI18n(){
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i18n]').forEach(e => e.textContent = t(e.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(e => e.placeholder = t(e.dataset.i18nPh));
+  document.querySelectorAll('[data-i18n-title]').forEach(e => e.title = t(e.dataset.i18nTitle));
+  document.querySelectorAll('[data-ic]').forEach(e => { if(!e._ic){ e.innerHTML = ic(e.dataset.ic); e._ic = 1; } });
+  document.title = t('app');
+  $('langCur').textContent = LANG.toUpperCase();
+  document.querySelectorAll('#langMenu button').forEach(b => b.classList.toggle('on', b.dataset.l===LANG));
+}
+function setLang(l){
+  LANG = l; store('lang', l); $('langMenu').classList.remove('on');
+  applyI18n(); applyRole(); renderList(); if(ED){ renderPhotos(); lockFields(); setEdTitle(); renderExisting(); }
+  if(IMP) renderImport();
+  if($('v-photo').classList.contains('on')) refreshEmbInfo();
+  if($('detail').classList.contains('on') && CUR) renderDetail(CUR);
+}
+document.addEventListener('click', () => $('langMenu').classList.remove('on'));
+
+/* =================== CẤU HÌNH =================== */
+// Link Web App (/exec) của Apps Script — dùng khi trang được mở từ GitHub Pages
+const API_URL = 'https://script.google.com/macros/s/AKfycbyvVZcCO4OrRQDyKAUMMZFliW0o7h6yfTSwmLX8v7PWQxViwiRdlBoGKFYpEvXFGB3WhA/exec';
+const REQUIRED = ['SERIAL','TONGQUAN','CHITIET'];
+const TFJS = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
+const MOBILENET = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js';
+const SHEETJS = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+const PH = 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 30"><rect width="40" height="30" fill="#f1f5f9"/><g fill="none" stroke="#cbd5e1" stroke-width="1.4"><rect x="13" y="9" width="14" height="12" rx="2"/><circle cx="17.5" cy="13.5" r="1.5"/><path d="m27 18-3-3-7 6"/></g></svg>');
+
+let CONF = {maxImages:30};
+let ADMIN = '';
+let ITEMS = [];
+let ED = null;
+let CUR = null;          // chi tiết đang mở
+let pickTarget = null;
+let modelP = null;
+let FLT = 'all';
+let IMP = null;
+const dataCache = {};
+const trCache = {};
+
+/* =================== TIỆN ÍCH =================== */
+/* Gọi máy chủ: chạy trong Apps Script thì dùng google.script.run; chạy trên GitHub Pages thì gọi API (fetch) */
+function run(fn, ...args){
+  if(window.google && google.script && google.script.run)
+    return new Promise((res, rej) => google.script.run.withSuccessHandler(res).withFailureHandler(e => rej(e))[fn](...args));
+  return fetch(API_URL, { method:'POST', redirect:'follow', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({fn, args}) })
+    .then(r => { if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(j => { if(!j.ok) throw new Error(j.error||'Error'); return j.data; });
+}
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function norm(s){ return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'d').toLowerCase(); }
+function toast(msg, ms){ const el=$('toast'); el.textContent=msg; el.style.display='block'; clearTimeout(el._h); el._h=setTimeout(()=>el.style.display='none', ms||2600); }
+function errMsg(e){ return (e && (e.message||e)) + ''; }
+function store(k, v){ try{ if(v===undefined) return localStorage.getItem(k)||''; localStorage.setItem(k, v); }catch(e){ return ''; } }
+function sess(k, v){ try{ if(v===undefined) return sessionStorage.getItem(k)||''; if(v===null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); }catch(e){ return ''; } }
+function thumbUrl(id, size){ return 'https://drive.google.com/thumbnail?id='+encodeURIComponent(id)+'&sz=w'+(size||500); }
+function driveImg(fileId, size){
+  const img = document.createElement('img'); img.loading='lazy'; img.alt='';
+  if(!fileId){ img.src = PH; return img; }
+  if(dataCache[fileId] && dataCache[fileId].done){ img.src = dataCache[fileId].done; return img; }
+  img.onerror = () => { img.onerror=null; imgData(fileId).then(d=>img.src=d).catch(()=>img.src=PH); };
+  img.src = thumbUrl(fileId, size);
+  return img;
+}
+function imgData(fileId){
+  if(!dataCache[fileId]){
+    const p = run('getImageData', fileId);
+    dataCache[fileId] = p; p.then(d => p.done = d).catch(() => delete dataCache[fileId]);
+  }
+  return dataCache[fileId];
+}
+function setImg(im, fileId, size){
+  im.onerror = () => { im.onerror = null; imgData(fileId).then(d => im.src = d).catch(() => im.src = PH); };
+  im.src = (dataCache[fileId] && dataCache[fileId].done) || thumbUrl(fileId, size);
+}
+function showLB(fileId, cap){ setImg($('lbImg'), fileId, 1600); $('lbCap').textContent = cap||''; $('lb').classList.add('on'); }
+function loadScript(src){ return new Promise((res, rej) => { const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=()=>rej(new Error('Cannot load '+src)); document.head.appendChild(s); }); }
+
+/* =================== ĐIỀU HƯỚNG =================== */
+function go(v){
+  document.querySelectorAll('.view').forEach(e => e.classList.toggle('on', e.id===v));
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v===v));
+  window.scrollTo(0,0);
+  if(v==='v-photo') refreshEmbInfo();
+  if(v==='v-edit') getModel().catch(()=>{});
+}
+
+/* =================== DANH SÁCH =================== */
+function setItems(list){
+  ITEMS = list || [];
+  ITEMS.forEach(it => it._k = norm([it.code,it.name,it.group,it.model,it.desc].join(' ')));
+  renderList._once = 1; renderList();
+}
+async function reloadItems(showToast){
+  try{
+    const list = await run('getItems');
+    setItems(list);
+    try{ localStorage.setItem('items_cache', JSON.stringify(list)); }catch(e){}
+    if(showToast) toast(t('refreshed',{n:ITEMS.length}));
+  }catch(e){ $('listInfo').textContent = t('load_err')+errMsg(e); $('list').innerHTML=''; }
+}
+function setFlt(f){ FLT=f; document.querySelectorAll('#flt .chip').forEach(b => b.classList.toggle('on', b.dataset.f===f)); renderList(); }
+function renderList(){
+  const box = $('list');
+  if(!ITEMS._loaded && !ITEMS.length && !renderList._once){ renderList._once=1; $('listInfo').innerHTML='<span class="spin"></span> '+t('loading'); box.innerHTML = Array(8).fill('<div class="skel"></div>').join(''); return; }
+  const qv = $('q').value; $('qclr').style.display = qv ? 'flex' : 'none';
+  const q = norm(qv).trim(), toks = q.split(/\s+/).filter(Boolean);
+  let rows = ITEMS;
+  if(FLT==='lack') rows = rows.filter(i => i.imgCount < 3);
+  if(FLT==='none') rows = rows.filter(i => !i.imgCount);
+  if(toks.length){
+    rows = rows.filter(it => toks.every(x => it._k.includes(x)));
+    rows.sort((a,b) => (norm(b.code).startsWith(q)?1:0) - (norm(a.code).startsWith(q)?1:0));
+  }
+  const filtered = toks.length || FLT!=='all';
+  $('listInfo').textContent = ITEMS.length ? (filtered ? t('list_found',{a:rows.length,b:ITEMS.length}) : t('list_total',{n:ITEMS.length})) : '';
+  box.innerHTML = '';
+  if(!ITEMS.length){ box.innerHTML = `<div class="empty">${ic('box')}<div>${esc(t('list_empty_db'))}</div></div>`; return; }
+  if(!rows.length){ box.innerHTML = `<div class="empty">${ic('search')}<div>${esc(t('list_none'))}</div></div>`; return; }
+  rows.slice(0, 300).forEach(it => {
+    const c = document.createElement('div'); c.className='card'; c.onclick = () => openDetail(it.code);
+    const ph = document.createElement('div'); ph.className='ph'; ph.appendChild(driveImg(it.thumb, 400));
+    const cnt = document.createElement('span'); cnt.className = 'cnt'+(it.imgCount<3?' low':''); cnt.innerHTML = ic('image')+it.imgCount; ph.appendChild(cnt);
+    const tx = document.createElement('div'); tx.className='tx';
+    tx.innerHTML = `<div class="code">${esc(it.code)}</div><div class="name">${esc(it.name)}</div>`
+      + ((it.group||it.model) ? `<div class="meta">${it.group?`<span class="badge">${esc(it.group)}</span>`:''}${it.model?`<span class="badge">${esc(it.model)}</span>`:''}</div>` : '');
+    c.append(ph, tx); box.appendChild(c);
+  });
+}
+
+/* =================== CHI TIẾT =================== */
+async function openDetail(code){
+  const b = $('detailBody'); CUR = null;
+  b.innerHTML = `<div class="grab"></div><div class="sheet-h"><div class="tt"></div><button class="close" onclick="closeDetail()">${ic('x')}</button></div><div class="empty"><span class="spin"></span> ${t('loading')}</div>`;
+  $('detail').classList.add('on'); document.body.style.overflow='hidden';
+  let it;
+  try{ it = await run('getItem', code); }catch(e){ b.querySelector('.empty').textContent = t('err')+errMsg(e); return; }
+  if(!it){ b.querySelector('.empty').textContent = t('d_notfound',{c:code}); return; }
+  it._showOrig = false; CUR = it; renderDetail(it);
+}
+async function translateItem(it){
+  if(LANG==='vi') return null;
+  const key = it.code+'|'+LANG+'|'+it.updated;
+  if(trCache[key]) return trCache[key];
+  const src = [it.name, it.group, it.desc].concat(it.images.map(i => i.note||''));
+  const out = await run('translateTexts', src, LANG);
+  const r = { name: out[0], group: out[1], desc: out[2], notes: out.slice(3) };
+  trCache[key] = r; return r;
+}
+function renderDetail(it, tr){
+  const useTr = tr && !it._showOrig;
+  const V = k => useTr && tr[k] ? tr[k] : it[k];
+  const note = i => (useTr && tr.notes[i]) || it.images[i].note || '';
+  const b = $('detailBody');
+  const order = ['TONGQUAN','SERIAL','CHITIET','KHAC'];
+  const imgs = it.images.map((im,i) => Object.assign({_i:i}, im)).sort((a,b) => order.indexOf(a.type)-order.indexOf(b.type));
+  const cell = (k, v, strong) => v ? `<div><span>${esc(t(k))}</span>${strong?'<b>':''}${esc(v)}${strong?'</b>':''}</div>` : '';
+  b.innerHTML = `<div class="grab"></div>
+    <div class="sheet-h"><div class="tt"><div class="code">${esc(it.code)}</div><h2>${esc(V('name'))}</h2></div>
+      <button class="close" onclick="closeDetail()">${ic('x')}</button></div>
+    <div class="sheet-b">
+      ${imgs.length ? `<div class="hero-img" id="dHero"></div><div class="gal" id="gal"></div>` : `<div class="banner warn" style="margin-top:12px">${ic('alert')}<span>${esc(t('d_noimg'))}</span></div>`}
+      <div id="trBar"></div>
+      <div class="info">
+        ${cell('d_code', it.code, true)}${cell('d_name', V('name'))}${cell('d_group', V('group'))}${cell('d_model', it.model)}${cell('d_unit', it.unit)}
+        ${cell('d_updated', (it.updated||'')+(it.by?' — '+it.by:''))}
+      </div>
+      ${it.desc ? `<div class="desc">${esc(V('desc'))}</div>` : ''}
+      <button class="btn block" id="dEdit" style="margin-top:16px">${ic('edit')}${esc(t('d_edit'))}</button>
+    </div>`;
+  $('dEdit').onclick = () => { closeDetail(); go('v-edit'); loadForEdit(it); };
+  // thanh dịch tự động
+  if(LANG!=='vi'){
+    const bar = $('trBar');
+    if(!tr){
+      bar.innerHTML = `<div class="trbar"><span class="spin"></span> ${esc(t('translating'))}</div>`;
+      translateItem(it).then(r => { if(CUR===it) renderDetail(it, r); }).catch(() => bar.innerHTML='');
+    } else {
+      bar.innerHTML = `<div class="trbar">${ic('lang')}<span>${esc(t('auto_tr'))} ·</span><button id="trTg">${esc(t(it._showOrig?'show_tr':'show_orig'))}</button></div>`;
+      $('trTg').onclick = () => { it._showOrig = !it._showOrig; renderDetail(it, tr); };
+    }
+  }
+  if(!imgs.length) return;
+  const hero = $('dHero'); const himg = document.createElement('img'); hero.appendChild(himg);
+  let curIm = imgs[0];
+  const setHero = im => { curIm = im; setImg(himg, im.fileId, 1200); document.querySelectorAll('#gal .strip div').forEach(d => d.classList.toggle('sel', d._id===im.id)); };
+  hero.onclick = () => showLB(curIm.fileId, TL(curIm.type)+(note(curIm._i)?' — '+note(curIm._i):'')+(curIm.by?' · '+curIm.by:''));
+  const gal = $('gal');
+  const h = document.createElement('h4'); h.textContent = t('photos_n',{n:imgs.length});
+  const s = document.createElement('div'); s.className='strip';
+  imgs.forEach(im => {
+    const d = document.createElement('div'); d._id = im.id; d.appendChild(driveImg(im.fileId, 300));
+    const n = note(im._i); const sm = document.createElement('small'); sm.textContent = TL(im.type)+(n?' · '+n:''); d.appendChild(sm);
+    d.onclick = () => setHero(im);
+    s.appendChild(d);
+  });
+  gal.append(h, s);
+  setHero(imgs[0]);
+}
+function closeDetail(){ $('detail').classList.remove('on'); document.body.style.overflow=''; CUR=null; }
+
+/* =================== ẢNH: CHỌN / NÉN =================== */
+function pick(target, camera){ pickTarget = target; const inp = camera ? $('fileCam') : $('filePick'); inp.value=''; inp.click(); }
+['fileCam','filePick'].forEach(id => $(id).addEventListener('change', async e => {
+  const files = [...e.target.files]; if(!files.length || !pickTarget) return;
+  const tg = pickTarget;
+  if(tg.kind==='query') return searchByPhoto(files[0]);
+  try{
+    if(tg.kind==='slot'){
+      ED.slots[tg.type] = await makePhoto(files[0], tg.type);
+      for(const f of files.slice(1)){ if(totalPhotos() >= CONF.maxImages) break; ED.extras.push(await makePhoto(f,'KHAC')); }
+    } else {
+      for(const f of files){
+        if(totalPhotos() >= CONF.maxImages){ toast(t('max_img',{n:CONF.maxImages})); break; }
+        ED.extras.push(await makePhoto(f, 'KHAC'));
+      }
+    }
+  }catch(err){ toast(errMsg(err)); }
+  renderPhotos();
+}));
+function fileToCanvas(file, max){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file); const im = new Image();
+    im.onload = () => {
+      let w = im.naturalWidth, h = im.naturalHeight; const r = Math.min(1, (max||1280)/Math.max(w,h));
+      w = Math.round(w*r); h = Math.round(h*r);
+      const c = document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(im, 0, 0, w, h); URL.revokeObjectURL(url); res(c);
+    };
+    im.onerror = () => { URL.revokeObjectURL(url); rej(new Error(t('bad_img'))); };
+    im.src = url;
+  });
+}
+async function makePhoto(file, type){
+  const c = await fileToCanvas(file, 1280);           // nén: cạnh dài 1280px, JPEG 82%
+  const p = { type, note:'', dataUrl: c.toDataURL('image/jpeg', 0.82) };
+  p.embP = embed(c).catch(() => '');
+  return p;
+}
+
+/* =================== NHẬN DẠNG ẢNH (MobileNet v2) =================== */
+function getModel(){
+  if(!modelP){
+    modelP = (async () => {
+      if(!window.tf) await loadScript(TFJS);
+      if(!window.mobilenet) await loadScript(MOBILENET);
+      return await mobilenet.load({version:2, alpha:1.0});
+    })();
+    modelP.catch(() => modelP = null);
+  }
+  return modelP;
+}
+async function embed(source){
+  const m = await getModel();
+  const tt = m.infer(source, true);
+  const v = await tt.data(); tt.dispose();
+  let mx = 0; for(let i=0;i<v.length;i++) mx = Math.max(mx, Math.abs(v[i])); mx = mx || 1;
+  const q = new Int8Array(v.length); for(let i=0;i<v.length;i++) q[i] = Math.round(v[i]/mx*127);
+  const u = new Uint8Array(q.buffer); let s=''; for(let i=0;i<u.length;i++) s += String.fromCharCode(u[i]);
+  return btoa(s);
+}
+function loadImg(src){ return new Promise((res, rej) => { const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=src; }); }
+
+async function searchByPhoto(file){
+  const st = $('qstatus'), out = $('qres'); out.innerHTML='';
+  try{
+    const c = await fileToCanvas(file, 640);
+    $('qprev').src = c.toDataURL('image/jpeg', 0.8); $('qprev').style.display='block';
+    st.innerHTML = '<span class="spin"></span> '+esc(t('ps_analyzing'));
+    const q = await embed(c);
+    st.innerHTML = '<span class="spin"></span> '+esc(t('ps_compare'));
+    const res = await run('findSimilar', q);
+    if(!res.length){ st.textContent = t('ps_empty'); return; }
+    st.textContent = t('ps_result');
+    res.forEach((r, i) => {
+      const pct = Math.round(r.score*100);
+      const col = pct>=80 ? 'var(--ok)' : pct>=65 ? 'var(--warn)' : 'var(--mute)';
+      const d = document.createElement('div'); d.className='res'; d.onclick = () => openDetail(r.code);
+      const ph = document.createElement('div'); ph.className='ph'; ph.appendChild(driveImg(r.fileId, 300));
+      const tx = document.createElement('div'); tx.style.cssText='min-width:0;flex:1';
+      tx.innerHTML = `<div class="code">${esc(r.code)}</div><div class="name">${esc(r.name)}</div>
+        <div class="meta">${i===0&&pct>=80?`<span class="badge green">${ic('check')}${esc(t('ps_high'))}</span>`:''}${r.group?`<span class="badge">${esc(r.group)}</span>`:''}</div>
+        <div class="bar"><i style="width:${pct}%;background:${col}"></i></div>`;
+      const sc = document.createElement('div'); sc.className='sc'; sc.style.color=col; sc.textContent = pct+'%';
+      d.append(ph, tx, sc); out.appendChild(d);
+    });
+  }catch(e){ st.textContent = t('err')+errMsg(e); }
+}
+async function refreshEmbInfo(){
+  try{
+    const miss = await run('getMissingEmbeddings');
+    $('embInfo').textContent = miss.length ? t('emb_missing',{n:miss.length}) : t('emb_all');
+    $('embBtn').style.display = miss.length ? 'inline-flex' : 'none';
+  }catch(e){ $('embInfo').textContent = errMsg(e); }
+}
+async function rebuildEmbeddings(){
+  const btn = $('embBtn'); btn.disabled = true;
+  try{
+    const miss = await run('getMissingEmbeddings'); let done = 0;
+    for(const m of miss){
+      $('embInfo').innerHTML = '<span class="spin"></span> '+esc(t('emb_prog',{a:done+1,b:miss.length,c:m.code}));
+      try{ const img = await loadImg(await imgData(m.fileId)); await run('setEmbedding', m.id, await embed(img)); }catch(e){ console.warn(m, e); }
+      done++;
+    }
+    toast(t('emb_done',{n:done}));
+  }catch(e){ toast(errMsg(e)); }
+  btn.disabled = false; refreshEmbInfo();
+}
+
+/* =================== IMPORT TỔNG NHẬP =================== */
+function colName(i){ let s=''; i++; while(i>0){ const m=(i-1)%26; s=String.fromCharCode(65+m)+s; i=Math.floor((i-1)/26); } return s; }
+function pickImport(){ const i=$('fileImp'); i.value=''; i.click(); }
+$('fileImp').addEventListener('change', async e => {
+  const f = e.target.files[0]; if(!f) return;
+  const box = $('impBox'); box.style.display='block'; box.innerHTML = '<div class="hint"><span class="spin"></span> '+esc(t('imp_reading',{f:f.name}))+'</div>';
+  try{
+    if(!window.XLSX) await loadScript(SHEETJS);
+    const wb = XLSX.read(await f.arrayBuffer(), {type:'array'});
+    IMP = { wb, file:f.name };
+    impSheet(wb.SheetNames[0]);
+  }catch(err){ IMP=null; box.innerHTML = `<div class="banner warn">${ic('alert')}<span>${esc(t('imp_bad')+errMsg(err))}</span></div>`; }
+});
+function impSheet(name){
+  IMP.sheet = name;
+  IMP.aoa = XLSX.utils.sheet_to_json(IMP.wb.Sheets[name], {header:1, raw:false, defval:''});
+  let hr = 0;
+  for(let i=0; i<Math.min(30, IMP.aoa.length); i++){ if(IMP.aoa[i].filter(c => String(c).trim()).length >= 4){ hr = i; break; } }
+  IMP.hdr = hr; IMP.map = impGuess(IMP.aoa[hr] || []);
+  renderImport();
+}
+function impGuess(h){
+  const find = re => h.findIndex(c => re.test(norm(c).trim()));
+  let code = find(/ma hang|item code|product code|ma vat tu|ma san pham|^code$|^ma$/);
+  let name = find(/ten hang|product name|item name|ten vat tu|ten san pham|^description$|^name$/);
+  let unit = find(/^dvt$|don vi|^unit$|^uom$/);
+  if(code < 0) code = 6;   // mặc định Import_Summary: cột G = mã hàng
+  if(name < 0) name = 7;   //                          cột H = tên hàng
+  return { code, name, unit, group:-1 };
+}
+function impRows(){
+  const m = IMP.map, out = [], seen = {};
+  for(let i = IMP.hdr+1; i < IMP.aoa.length; i++){
+    const r = IMP.aoa[i];
+    const code = String(r[m.code]||'').trim();
+    if(!code || /^(total|tong|tong cong|cong)$/.test(norm(code))) continue;
+    const k = code.toUpperCase(); if(seen[k]) continue;
+    const name = m.name>=0 ? String(r[m.name]||'').trim() : '';
+    if(!name) continue;
+    seen[k] = 1;
+    out.push({ code, name, unit: m.unit>=0 ? String(r[m.unit]||'').trim() : '', group: m.group>=0 ? String(r[m.group]||'').trim() : '' });
+  }
+  return out;
+}
+function renderImport(){
+  if(!IMP || !IMP.aoa) return;
+  const box = $('impBox'), h = IMP.aoa[IMP.hdr] || [];
+  const width = Math.max(h.length, ...IMP.aoa.slice(IMP.hdr, IMP.hdr+30).map(r => r.length), 1);
+  const opts = (sel, allowNone) => (allowNone?`<option value="-1" ${sel<0?'selected':''}>${esc(t('imp_none'))}</option>`:'')
+    + Array.from({length:width}, (_, i) => `<option value="${i}" ${i===sel?'selected':''}>${colName(i)}${h[i]?' — '+esc(String(h[i]).slice(0,28)):''}</option>`).join('');
+  const rows = impRows();
+  const have = new Set(ITEMS.map(i => i.code.trim().toUpperCase()));
+  const nNew = rows.filter(r => !have.has(r.code.toUpperCase())).length;
+  box.innerHTML = `
+    <div class="banner info">${ic('info')}<span>${esc(t('imp_info',{f:IMP.file,n:IMP.aoa.length}))}</span></div>
+    <div class="imp-map">
+      ${IMP.wb.SheetNames.length>1?`<div><label class="f">${esc(t('imp_sheet'))}</label><select onchange="impSheet(this.value)">${IMP.wb.SheetNames.map(s=>`<option ${s===IMP.sheet?'selected':''}>${esc(s)}</option>`).join('')}</select></div>`:''}
+      <div><label class="f">${esc(t('imp_hdr'))}</label><input type="number" min="1" value="${IMP.hdr+1}" onchange="IMP.hdr=Math.max(0,(+this.value||1)-1);renderImport()"></div>
+      <div><label class="f">${esc(t('imp_ccode'))} <span class="req">*</span></label><select onchange="IMP.map.code=+this.value;renderImport()">${opts(IMP.map.code)}</select></div>
+      <div><label class="f">${esc(t('imp_cname'))} <span class="req">*</span></label><select onchange="IMP.map.name=+this.value;renderImport()">${opts(IMP.map.name)}</select></div>
+      <div><label class="f">${esc(t('imp_cunit'))}</label><select onchange="IMP.map.unit=+this.value;renderImport()">${opts(IMP.map.unit,true)}</select></div>
+      <div><label class="f">${esc(t('imp_cgroup'))}</label><select onchange="IMP.map.group=+this.value;renderImport()">${opts(IMP.map.group,true)}</select></div>
+    </div>
+    <div class="checks">
+      <span class="badge">${esc(t('imp_count',{n:rows.length}))}</span>
+      <span class="badge green">${esc(t('imp_new',{n:nNew}))}</span>
+      <span class="badge">${esc(t('imp_have',{n:rows.length-nNew}))}</span>
+    </div>
+    <div class="tbl"><table>
+      <tr><th>#</th><th>${esc(t('d_code'))}</th><th>${esc(t('d_name'))}</th><th>${esc(t('f_unit'))}</th><th>${esc(t('f_group'))}</th><th>${esc(t('th_status'))}</th></tr>
+      ${rows.slice(0,50).map((r,i)=>`<tr><td>${i+1}</td><td class="code">${esc(r.code)}</td><td>${esc(r.name)}</td><td>${esc(r.unit)}</td><td>${esc(r.group)}</td>
+        <td>${have.has(r.code.toUpperCase())?`<span class="badge">${esc(t('st_have'))}</span>`:`<span class="badge green">${esc(t('st_new'))}</span>`}</td></tr>`).join('')}
+      ${rows.length>50?`<tr><td colspan="6" class="hint">${esc(t('imp_more',{n:rows.length-50}))}</td></tr>`:''}
+    </table></div>
+    <label class="ck"><input type="checkbox" id="impOver"><span>${esc(t('imp_over'))}</span></label>
+    <div class="prog" id="impProg"><i></i></div>
+    <div class="hint" id="impMsg"></div>
+    <button class="btn block" id="impBtn" style="margin-top:8px" ${rows.length?'':'disabled'} onclick="doImport()">${ic('upload')}${esc(t('imp_btn',{n:rows.length}))}</button>`;
+}
+async function doImport(){
+  const rows = impRows(); if(!rows.length) return;
+  if(!ADMIN) return toast(t('need_admin'));
+  const btn = $('impBtn'), prog = $('impProg'), bar = prog.firstElementChild, msg = $('impMsg');
+  const over = $('impOver').checked, user = $('f_user').value.trim();
+  btn.disabled = true; prog.style.display = 'block';
+  const tot = {added:0, updated:0, skipped:0}, CH = 400;
+  try{
+    for(let i=0; i<rows.length; i+=CH){
+      msg.innerHTML = '<span class="spin"></span> '+esc(t('imp_prog',{a:Math.min(i+CH, rows.length),b:rows.length}));
+      const r = await run('importItems', rows.slice(i, i+CH), over, user, ADMIN);
+      tot.added += r.added; tot.updated += r.updated; tot.skipped += r.skipped;
+      bar.style.width = Math.round(Math.min(i+CH, rows.length)/rows.length*100)+'%';
+    }
+    msg.innerHTML = `<div class="banner ok">${ic('check')}<span>${esc(t('imp_done',{a:tot.added,u:tot.updated,s:tot.skipped}))}</span></div>`;
+    await reloadItems();
+    toast(t('imp_toast',{n:tot.added}));
+  }catch(e){ msg.innerHTML = `<div class="banner warn">${ic('alert')}<span>${esc(t('err')+errMsg(e)+t('imp_retry'))}</span></div>`; }
+  btn.disabled = false;
+}
+
+/* =================== QUYỀN ADMIN =================== */
+function applyRole(){
+  const a = !!ADMIN, b = $('admBtn');
+  b.classList.toggle('on', a);
+  b.innerHTML = ic(a?'unlock':'lock') + `<span class="lbl">${esc(a ? t('adm_exit') : t('admin'))}</span>`;
+  b.title = a ? t('adm_exit') : t('adm_title');
+  $('impPanel').style.display = a ? 'block' : 'none';
+  if(ED){ renderExisting(); lockFields(); }
+}
+function adminToggle(){
+  if(ADMIN){ ADMIN=''; sess('adm', null); applyRole(); toast(t('adm_out')); return; }
+  $('admPass').value=''; $('admMsg').textContent=''; $('admModal').classList.add('on'); setTimeout(()=>$('admPass').focus(), 100);
+}
+async function adminLogin(){
+  const p = $('admPass').value; if(!p) return;
+  $('admMsg').innerHTML = '<span class="spin"></span> '+esc(t('adm_checking'));
+  try{
+    if(await run('adminLogin', p)){ ADMIN = p; sess('adm', p); $('admModal').classList.remove('on'); applyRole(); toast(t('adm_ok')); }
+    else $('admMsg').textContent = t('adm_wrong');
+  }catch(e){ $('admMsg').textContent = errMsg(e); }
+}
+
+/* =================== FORM THÊM / CẬP NHẬT =================== */
+function totalPhotos(){ return ED.existing.length + REQUIRED.filter(x=>ED.slots[x]).length + ED.extras.length; }
+function setEdTitle(){ $('edTitle').textContent = ED.code ? t('ed_upd',{c:ED.code}) : t('ed_new'); }
+function lockFields(){
+  const ro = !ADMIN && !!ED.code;
+  ['f_name','f_group','f_model','f_unit','f_desc'].forEach(id => { const el=$(id); el.readOnly = ro && !!el.value.trim(); });
+  $('edBanner').innerHTML = ED.code ? `<div class="banner info">${ic('info')}<span>${esc(t(ADMIN?'ban_admin':'ban_user'))}</span></div>` : '';
+}
+function resetForm(){
+  ED = { code:null, existing:[], slots:{SERIAL:null, TONGQUAN:null, CHITIET:null}, extras:[] };
+  ['f_code','f_name','f_group','f_model','f_unit','f_desc'].forEach(id => $(id).value='');
+  $('saveMsg').textContent='';
+  setEdTitle(); renderExisting(); renderPhotos(); lockFields();
+}
+function loadForEdit(it){
+  resetForm();
+  ED.code = it.code; ED.existing = it.images || [];
+  $('f_code').value = it.code; $('f_name').value = it.name||''; $('f_group').value = it.group||'';
+  $('f_model').value = it.model||''; $('f_unit').value = it.unit||''; $('f_desc').value = it.desc||'';
+  setEdTitle(); renderExisting(); renderPhotos(); lockFields();
+}
+/* ---- danh sách gợi ý khi gõ mã / tên hàng ---- */
+function attachSuggest(input){
+  const box = document.createElement('div'); box.className='sug'; input.parentNode.appendChild(box);
+  let rows = [], act = -1;
+  const hide = () => { box.style.display='none'; act=-1; };
+  const choose = async it => {
+    hide(); input.blur();
+    $('edBanner').innerHTML = `<div class="banner info"><span class="spin"></span><span>${esc(t('exist_loading'))}</span></div>`;
+    try{ const full = await run('getItem', it.code); if(full) loadForEdit(full); }catch(e){ toast(errMsg(e)); }
+  };
+  const show = () => {
+    if(ED && ED.code) return hide();
+    const q = norm(input.value).trim(); if(!q) return hide();
+    const toks = q.split(/\s+/);
+    rows = ITEMS.filter(it => toks.every(x => it._k.includes(x)));
+    rows.sort((a,b) => (norm(b.code).startsWith(q)||norm(b.name).startsWith(q)?1:0) - (norm(a.code).startsWith(q)||norm(a.name).startsWith(q)?1:0));
+    const total = rows.length; rows = rows.slice(0, 8);
+    if(!rows.length){ box.innerHTML = `<div class="sug-h">${esc(t('sug_none'))}</div>`; box.style.display='block'; return; }
+    box.innerHTML = `<div class="sug-h">${esc(t('sug_head',{n:total}))}</div>` + rows.map((r,i) => `<button type="button" data-i="${i}">
+        <span class="sug-t"><span class="code">${esc(r.code)}</span><span class="sug-n">${esc(r.name)}</span></span>
+        <span class="badge ${r.imgCount>=3?'green':'red'}">${ic('image')}${r.imgCount}</span></button>`).join('');
+    box.querySelectorAll('button').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); choose(rows[+b.dataset.i]); }));
+    box.style.display='block';
+  };
+  input.addEventListener('input', show);
+  input.addEventListener('focus', show);
+  input.addEventListener('blur', () => setTimeout(hide, 150));
+  input.addEventListener('keydown', e => {
+    const bs = box.querySelectorAll('button'); if(box.style.display!=='block' || !bs.length) return;
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){ e.preventDefault(); act = (act + (e.key==='ArrowDown'?1:-1) + bs.length) % bs.length; bs.forEach((b,i)=>b.classList.toggle('on', i===act)); }
+    else if(e.key==='Enter' && act>=0){ e.preventDefault(); choose(rows[act]); }
+    else if(e.key==='Escape') hide();
+  });
+}
+async function onCodeChange(){
+  const code = $('f_code').value.trim(); if(!code || ED.code) return;
+  const hit = ITEMS.find(i => i.code.trim().toUpperCase() === code.toUpperCase());
+  if(!hit) return;
+  $('edBanner').innerHTML = `<div class="banner info"><span class="spin"></span><span>${esc(t('exist_loading'))}</span></div>`;
+  try{ const it = await run('getItem', hit.code); if(it) loadForEdit(it); }catch(e){ toast(errMsg(e)); }
+}
+function renderExisting(){
+  const box = $('exist'); box.innerHTML='';
+  $('existPanel').style.display = ED.existing.length ? 'block' : 'none';
+  ED.existing.forEach(im => {
+    const d = document.createElement('div'); d.className='it';
+    d.appendChild(driveImg(im.fileId, 300));
+    const lb = document.createElement('div'); lb.className='lb2'; lb.textContent = TL(im.type)+(im.note?' · '+im.note:''); d.appendChild(lb);
+    d.onclick = () => showLB(im.fileId, TL(im.type)+(im.note?' — '+im.note:''));
+    if(ADMIN){
+      const x = document.createElement('button'); x.className='x'; x.innerHTML=ic('x');
+      x.onclick = async ev => {
+        ev.stopPropagation();
+        if(!confirm(t('del_confirm',{t:TL(im.type)}))) return;
+        try{ await run('deleteImage', im.id, ADMIN); ED.existing = ED.existing.filter(e => e.id!==im.id); renderExisting(); renderPhotos(); toast(t('deleted')); reloadItems(); }
+        catch(e){ toast(errMsg(e)); }
+      };
+      d.appendChild(x);
+    }
+    box.appendChild(d);
+  });
+}
+function photoTile(p, onRemove, typeSelect, title){
+  const s = document.createElement('div'); s.className='slot done';
+  if(title){ const tt=document.createElement('div'); tt.className='t'; tt.innerHTML = ic('check')+esc(title); s.appendChild(tt); }
+  const pv = document.createElement('div'); pv.className='pv'; pv.style.margin = title ? '8px 8px 0' : '0'; pv.style.borderRadius = title ? '8px' : '0'; pv.style.overflow='hidden';
+  const img = document.createElement('img'); img.src = p.dataUrl; pv.appendChild(img);
+  const x = document.createElement('button'); x.className='x'; x.innerHTML=ic('x'); x.onclick = e => { e.stopPropagation(); onRemove(); }; pv.appendChild(x);
+  s.appendChild(pv);
+  if(typeSelect){
+    const sel = document.createElement('select');
+    sel.innerHTML = ['SERIAL','TONGQUAN','CHITIET','KHAC'].map(k => `<option value="${k}" ${k===p.type?'selected':''}>${esc(TL(k))}</option>`).join('');
+    sel.onchange = () => { p.type = sel.value; renderChecks(); };
+    s.appendChild(sel);
+  }
+  const n = document.createElement('input'); n.className='note'; n.placeholder=t('note_ph'); n.value=p.note;
+  n.oninput = () => p.note = n.value; s.appendChild(n);
+  return s;
+}
+function renderPhotos(){
+  if(!ED) return;
+  const box = $('slots'); box.innerHTML='';
+  REQUIRED.forEach(ty => {
+    const p = ED.slots[ty];
+    if(p){ box.appendChild(photoTile(p, () => { ED.slots[ty]=null; renderPhotos(); }, false, TL(ty))); return; }
+    const has = ED.existing.some(e => e.type===ty);
+    const s = document.createElement('div'); s.className = 'slot'+(has?' done':'');
+    s.innerHTML = `<div class="pv" onclick="pick({kind:'slot',type:'${ty}'},true)"><div class="ic">${ic(has?'check':'camera')}</div><b>${esc(TL(ty))}</b><div>${esc(has?t('has_saved'):t('h_'+ty))}</div></div>
+      <div class="acts"><button onclick="pick({kind:'slot',type:'${ty}'},true)">${ic('camera')}${esc(t('take'))}</button><button class="io" title="${esc(t('choose'))}" onclick="pick({kind:'slot',type:'${ty}'},false)">${ic('image')}</button></div>`;
+    box.appendChild(s);
+  });
+  const ex = $('extras'); ex.innerHTML='';
+  ED.extras.forEach((p, i) => ex.appendChild(photoTile(p, () => { ED.extras.splice(i,1); renderPhotos(); }, true)));
+  if(totalPhotos() < CONF.maxImages){
+    const add = document.createElement('div'); add.className='slot add';
+    add.innerHTML = `<div class="pv" onclick="pick({kind:'extra'},false)"><div class="ic">${ic('plus')}</div><b>${esc(t('add_photo'))}</b><div>${esc(t('multi'))}</div></div>
+      <div class="acts"><button onclick="pick({kind:'extra'},true)">${ic('camera')}${esc(t('take'))}</button><button class="io" title="${esc(t('choose'))}" onclick="pick({kind:'extra'},false)">${ic('image')}</button></div>`;
+    ex.appendChild(add);
+  }
+  renderChecks();
+}
+function typeOk(x){ return ED.existing.some(e=>e.type===x) || !!ED.slots[x] || ED.extras.some(p=>p.type===x); }
+function renderChecks(){
+  $('checks').innerHTML = REQUIRED.map(x => `<span class="badge ${typeOk(x)?'green':'red'}">${ic(typeOk(x)?'check':'x')}${esc(TL(x))}</span>`).join('')
+    + `<span class="badge">${esc(t('photos_count',{a:totalPhotos(),b:CONF.maxImages}))}</span>`;
+}
+async function save(){
+  const data = { code:$('f_code').value.trim(), name:$('f_name').value.trim(), group:$('f_group').value.trim(),
+    model:$('f_model').value.trim(), unit:$('f_unit').value.trim(), desc:$('f_desc').value.trim(), user:$('f_user').value.trim() };
+  if(!data.code){ toast(t('need_code')); return $('f_code').focus(); }
+  if(!data.name){ toast(t('need_name')); return $('f_name').focus(); }
+  const miss = REQUIRED.filter(x => !typeOk(x));
+  if(miss.length) return toast(t('miss_photo',{l:miss.map(TL).join(', ')}), 3500);
+  if(data.user) store('user', data.user);
+
+  const photos = REQUIRED.filter(x => ED.slots[x]).map(x => ED.slots[x]).concat(ED.extras);
+  const btn = $('saveBtn'), prog = $('prog'), bar = prog.firstElementChild, msg = $('saveMsg');
+  btn.disabled = true; prog.style.display='block'; bar.style.width='3%';
+  try{
+    msg.innerHTML = '<span class="spin"></span> '+esc(t('saving_info'));
+    const r = await run('saveItem', data, ADMIN);
+    let noEmb = 0, sent = 0;
+    for(let i=0; i<photos.length; i++){
+      const p = photos[i];
+      if(p.uploaded) continue;
+      msg.innerHTML = '<span class="spin"></span> '+esc(t('uploading',{a:i+1,b:photos.length}));
+      const emb = await Promise.race([p.embP, new Promise(res => setTimeout(() => res(''), 30000))]) || '';
+      if(!emb) noEmb++;
+      await run('uploadImage', { code:r.code, type:p.type, note:p.note, base64:p.dataUrl, mime:'image/jpeg', embedding:emb, user:data.user });
+      p.uploaded = true; sent++;
+      bar.style.width = Math.round((i+1)/Math.max(photos.length,1)*100)+'%';
+    }
+    bar.style.width='100%';
+    toast(t(r.isNew?'saved_new':'saved_upd',{c:r.code,n:sent}) + (noEmb?t('no_emb',{n:noEmb}):''), 4000);
+    await reloadItems();
+    resetForm(); go('v-search'); openDetail(r.code);
+  }catch(e){
+    msg.textContent = t('err')+errMsg(e)+t('save_err');
+  }finally{
+    btn.disabled = false; setTimeout(() => { prog.style.display='none'; bar.style.width='0'; }, 800);
+  }
+}
+
+/* =================== KHỞI ĐỘNG =================== */
+(async function init(){
+  const saved = store('lang');
+  const nl = (navigator.language||'').toLowerCase();
+  LANG = I18N[saved] ? saved : nl.startsWith('vi') ? 'vi' : (nl.startsWith('ht') || nl.startsWith('fr')) ? 'ht' : nl.startsWith('en') ? 'en' : 'vi';
+  ADMIN = sess('adm');
+  attachSuggest($('f_code')); attachSuggest($('f_name'));
+  applyI18n(); applyRole();
+  resetForm();
+  $('f_user').value = store('user');
+  // hiện ngay danh sách lần trước (lưu trên máy), rồi cập nhật bản mới ở nền
+  let cached = null; try{ cached = JSON.parse(localStorage.getItem('items_cache')||'null'); }catch(e){}
+  if(cached && cached.length) setItems(cached); else renderList();
+  run('getConfig').then(c => { CONF = c; renderPhotos(); }).catch(()=>{});
+  await reloadItems();
+})();
+</script>
+</body>
+</html>
