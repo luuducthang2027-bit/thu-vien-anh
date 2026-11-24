@@ -5,6 +5,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Thư viện ảnh">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -149,6 +155,8 @@
   .exist .it .lb2{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,#000b);color:#fff;font-size:11px;padding:12px 6px 4px}
   .banner{padding:10px 12px;border-radius:10px;font-size:13.5px;margin:8px 0 2px;display:flex;gap:8px;align-items:flex-start}
   .banner svg.i{margin-top:1px}
+  .banner>span{flex:1;text-align:left;min-width:0;overflow-wrap:anywhere}
+  .hint{overflow-wrap:anywhere}
   .banner.info{background:var(--info-s);color:var(--info)}.banner.warn{background:var(--warn-s);color:var(--warn)}.banner.ok{background:var(--ok-s);color:var(--ok)}
   .checks{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
   .prog{height:8px;background:#eef2f6;border-radius:8px;overflow:hidden;margin-top:12px;display:none}
@@ -217,6 +225,40 @@
 
   .toast{position:fixed;left:50%;bottom:calc(86px + var(--safe-b));transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:14px;z-index:80;display:none;max-width:92%;box-shadow:var(--sh2);text-align:center}
   @media(min-width:900px){.toast{bottom:30px}}
+  .stats{margin-top:14px;padding-top:12px;border-top:1px solid #ffffff1f;font-size:13px;color:#cbd5e1}
+  .stats .row1{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+  .stats b{color:#fff}
+  .stats .pbar{height:8px;border-radius:8px;background:#ffffff1f;overflow:hidden}
+  .stats .pbar i{display:block;height:100%;background:linear-gradient(90deg,#22c55e,#4ade80);border-radius:8px;transition:width .4s}
+  .listbar{flex-wrap:wrap;gap:8px}
+  .tools{display:flex;gap:8px}
+  .tools select{width:auto;max-width:180px;padding:7px 30px 7px 10px;font-size:13px;border-radius:9px;background:#fff}
+  .admbar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+  .subh{margin:16px 0 0;font-size:14px;padding-top:14px;border-top:1px solid var(--line)}
+  .actrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-top:16px}
+  .actrow .btn.ghost{padding:11px 13px}
+  .lbnav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:#ffffff22;color:#fff;display:flex;align-items:center;justify-content:center}
+  .lbnav.prev{left:10px}.lbnav.next{right:10px}
+  .lbnav svg.i{width:24px;height:24px}
+  .qrlabel{border:1.5px dashed #cbd5e1;border-radius:12px;padding:16px;display:flex;gap:14px;align-items:center;margin:12px 0;background:#fff}
+  .qrlabel svg{width:130px;height:130px;flex:none}
+  .qrlabel .ql-t{min-width:0}
+  .qrlabel .ql-t .code{font-size:18px}
+  .qrlabel .ql-t .nm{font-weight:600;font-size:14px;margin-top:4px;word-break:break-word}
+  .qrlabel .ql-t .sm{font-size:11px;color:var(--mute);margin-top:6px}
+  .row2{display:flex;gap:10px}.row2 .btn{flex:1}
+  .logl{list-style:none;margin:8px 0 0;padding:0}
+  .logl li{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+  .logl li .tm{color:var(--mute);font-size:12px}
+  .logl li .ac b{color:var(--ink)}
+  .foot{text-align:center;color:var(--mute);font-size:12px;margin:26px 0 4px}
+  .it select{position:absolute;left:4px;top:4px;width:auto;max-width:calc(100% - 44px);font-size:11px;padding:3px 4px;border-radius:6px;z-index:2}
+  @media print{
+    body *{visibility:hidden!important}
+    #qrModal,#qrModal .sheet,#qrLabel,#qrLabel *{visibility:visible!important}
+    #qrModal{position:static;background:none}
+    #qrLabel{position:fixed;left:0;top:0;border:1px solid #000;width:90mm}
+  }
   .sugw{position:relative}
   .sug{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh2);z-index:12;display:none;max-height:60vh;overflow:auto}
   .sug-h{font-size:12px;color:var(--mute);padding:8px 12px;border-bottom:1px solid var(--line);background:var(--soft)}
@@ -260,17 +302,32 @@
       <h2 data-i18n="hero_t"></h2>
       <p data-i18n="hero_p"></p>
       <div class="search"><span data-ic="search"></span>
-        <input id="q" data-i18n-ph="q_ph" autocomplete="off" oninput="renderList()">
+        <input id="q" type="search" enterkeyhint="search" data-i18n-ph="q_ph" autocomplete="off" autocorrect="off" spellcheck="false" oninput="renderListDebounced()">
         <button class="clr" id="qclr" onclick="$('q').value='';renderList();$('q').focus()"><span data-ic="x"></span></button>
       </div>
       <div class="chips" id="flt">
         <button class="chip on" data-f="all" onclick="setFlt('all')" data-i18n="f_all"></button>
         <button class="chip" data-f="lack" onclick="setFlt('lack')" data-i18n="f_lack"></button>
         <button class="chip" data-f="none" onclick="setFlt('none')" data-i18n="f_none"></button>
+        <button class="chip" data-f="done" onclick="setFlt('done')" data-i18n="f_done"></button>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="listbar">
+      <span id="listInfo"></span>
+      <div class="tools">
+        <select id="grpSel" onchange="renderList()" aria-label="group"></select>
+        <select id="sortSel" onchange="store('sort',this.value);renderList()" aria-label="sort">
+          <option value="code" data-i18n="s_code"></option>
+          <option value="name" data-i18n="s_name"></option>
+          <option value="new" data-i18n="s_new"></option>
+          <option value="less" data-i18n="s_less"></option>
+          <option value="more" data-i18n="s_more"></option>
+        </select>
       </div>
     </div>
-    <div class="listbar"><span id="listInfo"></span></div>
     <div class="grid" id="list"></div>
+    <div style="text-align:center;margin-top:16px"><button class="btn ghost" id="moreBtn" style="display:none" onclick="PAGE_N+=PAGE;renderList(true)"></button></div>
   </section>
 
   <!-- ========== TÌM BẰNG ẢNH ========== -->
@@ -297,10 +354,13 @@
   <!-- ========== THÊM / CẬP NHẬT ========== -->
   <section class="view" id="v-edit">
     <div class="panel" id="impPanel" style="display:none">
-      <div class="ph-head">
-        <h3><span data-ic="sheet"></span><span data-i18n="imp_title"></span></h3>
+      <div class="ph-head"><h3><span data-ic="shield"></span><span data-i18n="adm_tools"></span></h3></div>
+      <div class="admbar">
         <button class="btn dark sm" onclick="pickImport()"><span data-ic="upload"></span><span data-i18n="imp_pick"></span></button>
+        <button class="btn ghost sm" onclick="exportExcel()"><span data-ic="download"></span><span data-i18n="exp"></span></button>
+        <button class="btn ghost sm" onclick="openLog()"><span data-ic="clock"></span><span data-i18n="log_btn"></span></button>
       </div>
+      <h4 class="subh" data-i18n="imp_title"></h4>
       <div class="hint" data-i18n="imp_hint"></div>
       <div id="impBox" style="display:none"></div>
     </div>
@@ -348,10 +408,31 @@
       </div>
     </div>
   </section>
+  <footer class="foot"><span data-i18n="app"></span> · v<span id="ver">2.0</span></footer>
 </main>
 
 <div class="modal" id="detail" onclick="if(event.target===this)closeDetail()"><div class="sheet" id="detailBody"></div></div>
-<div class="lb" id="lb" onclick="this.classList.remove('on')"><button class="close"><span data-ic="x"></span></button><img id="lbImg" alt=""><p id="lbCap"></p></div>
+<div class="lb" id="lb">
+  <button class="close" onclick="closeLB()"><span data-ic="x"></span></button>
+  <button class="lbnav prev" onclick="lbStep(-1)"><span data-ic="left"></span></button>
+  <button class="lbnav next" onclick="lbStep(1)"><span data-ic="right"></span></button>
+  <img id="lbImg" alt="" onclick="closeLB()"><p id="lbCap"></p>
+</div>
+<div class="modal" id="qrModal" onclick="if(event.target===this)this.classList.remove('on')"><div class="sheet" style="max-width:420px">
+  <div class="grab"></div>
+  <div class="sheet-h"><div class="tt"><h2 data-i18n="qr_t"></h2></div><button class="close" onclick="$('qrModal').classList.remove('on')"><span data-ic="x"></span></button></div>
+  <div class="sheet-b">
+    <div class="hint" data-i18n="qr_hint"></div>
+    <div class="qrlabel" id="qrLabel"></div>
+    <div class="row2"><button class="btn" onclick="window.print()"><span data-ic="printer"></span><span data-i18n="print"></span></button>
+      <button class="btn ghost" onclick="shareItem(QR_CODE)"><span data-ic="share"></span><span data-i18n="share"></span></button></div>
+  </div>
+</div></div>
+<div class="modal" id="logModal" onclick="if(event.target===this)this.classList.remove('on')"><div class="sheet" style="max-width:720px">
+  <div class="grab"></div>
+  <div class="sheet-h"><div class="tt"><h2 data-i18n="log_t"></h2></div><button class="close" onclick="$('logModal').classList.remove('on')"><span data-ic="x"></span></button></div>
+  <div class="sheet-b" id="logBody"></div>
+</div></div>
 
 <div class="modal" id="admModal" onclick="if(event.target===this)this.classList.remove('on')"><div class="sheet" style="max-width:400px">
   <div class="grab"></div>
@@ -393,7 +474,14 @@ const ICONS = {
   cpu:'<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
   info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
   alert:'<path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3z"/><path d="M12 9v4M12 17h.01"/>',
-  lang:'<path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/>'
+  lang:'<path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/>',
+  left:'<path d="m15 18-6-6 6-6"/>', right:'<path d="m9 18 6-6-6-6"/>',
+  share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>',
+  qr:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 17h4v4h-4"/>',
+  printer:'<path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
 };
 function ic(n){ return '<svg class="i" viewBox="0 0 24 24">'+(ICONS[n]||'')+'</svg>'; }
 
@@ -438,6 +526,13 @@ vi:{
   ban_user:'Mã này đã có trong thư viện — bạn có thể thêm ảnh mới. Chỉ Admin được sửa thông tin đã có và xóa ảnh.',
   sug_head:'{n} mã đã có trong thư viện — chọn để xem / thêm ảnh', sug_none:'Chưa có trong thư viện — sẽ tạo mã mới',
   exist_loading:'Mã đã tồn tại, đang tải dữ liệu cũ…', del_confirm:'Xóa ảnh "{t}" này? (File chuyển vào thùng rác Drive)', deleted:'Đã xóa ảnh', bad_img:'Không đọc được ảnh',
+  model_fail:'Không tải được mô hình nhận dạng ảnh (kiểm tra kết nối mạng). Bạn vẫn có thể tìm theo mã / tên ở mục Tra cứu.',
+  f_done:'Đủ ảnh', stats_t:'Tiến độ chụp ảnh', stats_d:'{a}/{b} mã đủ 3 ảnh bắt buộc', stats_s:'{n} mã đã có ảnh', g_all:'Tất cả nhóm',
+  s_code:'Mã A→Z', s_name:'Tên A→Z', s_new:'Mới cập nhật', s_less:'Ít ảnh nhất', s_more:'Nhiều ảnh nhất', more:'Xem thêm ({n} mã nữa)',
+  share:'Chia sẻ', copied:'Đã sao chép link', copy_manual:'Sao chép link:', qr:'Nhãn QR', qr_t:'Nhãn QR thiết bị',
+  qr_hint:'In và dán nhãn lên kệ / thiết bị — quét bằng camera điện thoại là mở ngay trang thiết bị này.', print:'In nhãn',
+  adm_tools:'Công cụ Admin', exp:'Xuất Excel', exp_done:'Đã xuất {n} mã', xl_imgs:'Số ảnh', xl_req:'Đủ 3 ảnh',
+  log_t:'Nhật ký thao tác', log_btn:'Nhật ký', log_empty:'Chưa có thao tác nào', type_changed:'Đã đổi loại ảnh',
   adm_title:'Đăng nhập Admin', adm_hint:'Admin được: import file tổng nhập, sửa thông tin mã đã có, xóa ảnh.', adm_pass:'Mật khẩu', adm_login:'Đăng nhập',
   adm_checking:'Đang kiểm tra…', adm_wrong:'Sai mật khẩu', adm_ok:'Đã đăng nhập Admin', adm_out:'Đã thoát quyền Admin', adm_exit:'Thoát Admin'
 },
@@ -480,6 +575,13 @@ en:{
   ban_user:'This code is already in the library — you can add new photos. Only Admin can edit existing details or delete photos.',
   sug_head:'{n} matching items in the library — pick one to view / add photos', sug_none:'Not in the library yet — a new item will be created',
   exist_loading:'Code exists, loading saved data…', del_confirm:'Delete this "{t}" photo? (The file goes to Drive trash)', deleted:'Photo deleted', bad_img:'Cannot read the image',
+  model_fail:'Could not load the image-recognition model (check your connection). You can still search by code / name.',
+  f_done:'Complete', stats_t:'Photo progress', stats_d:'{a}/{b} items have the 3 required photos', stats_s:'{n} items have photos', g_all:'All groups',
+  s_code:'Code A→Z', s_name:'Name A→Z', s_new:'Recently updated', s_less:'Fewest photos', s_more:'Most photos', more:'Show more ({n} left)',
+  share:'Share', copied:'Link copied', copy_manual:'Copy link:', qr:'QR label', qr_t:'Equipment QR label',
+  qr_hint:'Print and stick the label on the shelf / equipment — scan it with a phone camera to open this page.', print:'Print label',
+  adm_tools:'Admin tools', exp:'Export Excel', exp_done:'Exported {n} items', xl_imgs:'Photos', xl_req:'3 required',
+  log_t:'Activity log', log_btn:'Activity log', log_empty:'No activity yet', type_changed:'Photo type changed',
   adm_title:'Admin login', adm_hint:'Admin can: import the receiving summary, edit existing items, delete photos.', adm_pass:'Password', adm_login:'Log in',
   adm_checking:'Checking…', adm_wrong:'Wrong password', adm_ok:'Logged in as Admin', adm_out:'Logged out of Admin', adm_exit:'Exit Admin'
 },
@@ -522,6 +624,13 @@ ht:{
   ban_user:'Kòd sa a deja nan bibliyotèk la — ou ka ajoute nouvo foto. Se sèlman Admin ki ka modifye enfòmasyon oswa efase foto.',
   sug_head:'{n} atik ki deja nan bibliyotèk la — chwazi youn pou wè / ajoute foto', sug_none:'Poko nan bibliyotèk la — y ap kreye yon nouvo atik',
   exist_loading:'Kòd la egziste, ap chaje done yo…', del_confirm:'Efase foto "{t}" sa a? (Fichye a ale nan poubèl Drive)', deleted:'Foto efase', bad_img:'Pa ka li imaj la',
+  model_fail:'Pa ka chaje modèl rekonesans foto a (verifye koneksyon an). Ou ka toujou chèche pa kòd / non.',
+  f_done:'Foto konplè', stats_t:'Pwogrè foto', stats_d:'{a}/{b} atik gen 3 foto obligatwa yo', stats_s:'{n} atik gen foto', g_all:'Tout gwoup',
+  s_code:'Kòd A→Z', s_name:'Non A→Z', s_new:'Dènye mizajou', s_less:'Mwens foto', s_more:'Plis foto', more:'Wè plis ({n} lòt)',
+  share:'Pataje', copied:'Lyen an kopye', copy_manual:'Kopye lyen an:', qr:'Etikèt QR', qr_t:'Etikèt QR ekipman',
+  qr_hint:'Enprime epi kole etikèt la sou etajè / ekipman an — eskane l ak kamera telefòn pou louvri paj sa a.', print:'Enprime etikèt',
+  adm_tools:'Zouti Admin', exp:'Ekspòte Excel', exp_done:'{n} atik ekspòte', xl_imgs:'Foto', xl_req:'3 obligatwa',
+  log_t:'Jounal aksyon', log_btn:'Jounal', log_empty:'Poko gen aksyon', type_changed:'Kalite foto a chanje',
   adm_title:'Koneksyon Admin', adm_hint:'Admin ka: enpòte rezime antre stòk, modifye atik ki deja la, efase foto.', adm_pass:'Modpas', adm_login:'Konekte',
   adm_checking:'Ap verifye…', adm_wrong:'Move modpas', adm_ok:'Konekte kòm Admin', adm_out:'Dekonekte Admin', adm_exit:'Soti Admin'
 }};
@@ -540,7 +649,7 @@ function applyI18n(){
 }
 function setLang(l){
   LANG = l; store('lang', l); $('langMenu').classList.remove('on');
-  applyI18n(); applyRole(); renderList(); if(ED){ renderPhotos(); lockFields(); setEdTitle(); renderExisting(); }
+  applyI18n(); applyRole(); renderGroups(); renderStats(); renderList(true); if(ED){ renderPhotos(); lockFields(); setEdTitle(); renderExisting(); }
   if(IMP) renderImport();
   if($('v-photo').classList.contains('on')) refreshEmbInfo();
   if($('detail').classList.contains('on') && CUR) renderDetail(CUR);
@@ -554,6 +663,13 @@ const REQUIRED = ['SERIAL','TONGQUAN','CHITIET'];
 const TFJS = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
 const MOBILENET = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js';
 const SHEETJS = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+const QRLIB = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js';
+// Link công khai (GitHub Pages) dùng cho link chia sẻ / mã QR
+const PUBLIC_URL = 'https://luuducthang2027-bit.github.io/thu-vien-anh/';
+const PAGE = 60;           // số thẻ hiển thị mỗi lần
+let PAGE_N = PAGE;
+let LB = { list:[], i:0 };
+let QR_CODE = '';
 const PH = 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 30"><rect width="40" height="30" fill="#f1f5f9"/><g fill="none" stroke="#cbd5e1" stroke-width="1.4"><rect x="13" y="9" width="14" height="12" rx="2"/><circle cx="17.5" cy="13.5" r="1.5"/><path d="m27 18-3-3-7 6"/></g></svg>');
 
 let CONF = {maxImages:30};
@@ -604,7 +720,25 @@ function setImg(im, fileId, size){
   im.onerror = () => { im.onerror = null; imgData(fileId).then(d => im.src = d).catch(() => im.src = PH); };
   im.src = (dataCache[fileId] && dataCache[fileId].done) || thumbUrl(fileId, size);
 }
-function showLB(fileId, cap){ setImg($('lbImg'), fileId, 1600); $('lbCap').textContent = cap||''; $('lb').classList.add('on'); }
+function showLB(fileId, cap){ openLB([{fileId, cap}], 0); }
+function openLB(list, i){ LB = { list, i: Math.max(0, i) }; lbShow(); $('lb').classList.add('on'); }
+function lbShow(){
+  const it = LB.list[LB.i]; if(!it) return;
+  setImg($('lbImg'), it.fileId, 1600);
+  $('lbCap').textContent = (LB.list.length>1 ? (LB.i+1)+'/'+LB.list.length+' · ' : '') + (it.cap||'');
+  document.querySelectorAll('.lbnav').forEach(b => b.style.display = LB.list.length>1 ? 'flex' : 'none');
+}
+function lbStep(d){ if(LB.list.length<2) return; LB.i = (LB.i + d + LB.list.length) % LB.list.length; lbShow(); }
+function closeLB(){ $('lb').classList.remove('on'); }
+(function(){ let x0 = null;
+  const lb = document.getElementById('lb');
+  lb.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive:true});
+  lb.addEventListener('touchend', e => { if(x0===null) return; const dx = e.changedTouches[0].clientX - x0; if(Math.abs(dx) > 50) lbStep(dx<0?1:-1); x0 = null; });
+  document.addEventListener('keydown', e => {
+    if($('lb').classList.contains('on')){ if(e.key==='ArrowRight') lbStep(1); else if(e.key==='ArrowLeft') lbStep(-1); else if(e.key==='Escape') closeLB(); }
+    else if(e.key==='Escape'){ document.querySelectorAll('.modal.on').forEach(m => m.classList.remove('on')); document.body.style.overflow=''; }
+  });
+})();
 function loadScript(src){ return new Promise((res, rej) => { const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=()=>rej(new Error('Cannot load '+src)); document.head.appendChild(s); }); }
 
 /* =================== ĐIỀU HƯỚNG =================== */
@@ -613,14 +747,13 @@ function go(v){
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v===v));
   window.scrollTo(0,0);
   if(v==='v-photo') refreshEmbInfo();
-  if(v==='v-edit') getModel().catch(()=>{});
 }
 
 /* =================== DANH SÁCH =================== */
 function setItems(list){
   ITEMS = list || [];
   ITEMS.forEach(it => it._k = norm([it.code,it.name,it.group,it.model,it.desc].join(' ')));
-  renderList._once = 1; renderList();
+  renderList._once = 1; renderGroups(); renderStats(); renderList(true);
 }
 async function reloadItems(showToast){
   try{
@@ -631,27 +764,57 @@ async function reloadItems(showToast){
   }catch(e){ $('listInfo').textContent = t('load_err')+errMsg(e); $('list').innerHTML=''; }
 }
 function setFlt(f){ FLT=f; document.querySelectorAll('#flt .chip').forEach(b => b.classList.toggle('on', b.dataset.f===f)); renderList(); }
-function renderList(){
+let _rlT = 0;
+function renderListDebounced(){ clearTimeout(_rlT); _rlT = setTimeout(() => renderList(), 120); }
+function renderStats(){
+  const n = ITEMS.length; if(!n){ $('stats').innerHTML=''; return; }
+  const done = ITEMS.filter(i => (i.req||0) >= 3).length, some = ITEMS.filter(i => i.imgCount > 0).length;
+  const p = Math.round(done/n*1000)/10;
+  $('stats').innerHTML = `<div class="row1"><span>${ic('check')} ${esc(t('stats_t'))}</span><span><b>${p}%</b></span></div>
+    <div class="pbar"><i style="width:${p}%"></i></div>
+    <div class="row1" style="margin:6px 0 0"><span>${esc(t('stats_d',{a:done.toLocaleString(),b:n.toLocaleString()}))}</span><span>${esc(t('stats_s',{n:some.toLocaleString()}))}</span></div>`;
+}
+function renderGroups(){
+  const sel = $('grpSel'), cur = sel.value;
+  const cnt = {}; ITEMS.forEach(i => { const g = (i.group||'').trim(); if(g) cnt[g] = (cnt[g]||0)+1; });
+  const gs = Object.keys(cnt).sort((a,b) => a.localeCompare(b));
+  sel.innerHTML = `<option value="">${esc(t('g_all'))}</option>` + gs.map(g => `<option value="${esc(g)}">${esc(g)} (${cnt[g]})</option>`).join('');
+  sel.value = gs.includes(cur) ? cur : '';
+  sel.style.display = gs.length ? '' : 'none';
+}
+function renderList(keepPage){
+  if(!keepPage) PAGE_N = PAGE;
   const box = $('list');
   if(!ITEMS._loaded && !ITEMS.length && !renderList._once){ renderList._once=1; $('listInfo').innerHTML='<span class="spin"></span> '+t('loading'); box.innerHTML = Array(8).fill('<div class="skel"></div>').join(''); return; }
   const qv = $('q').value; $('qclr').style.display = qv ? 'flex' : 'none';
   const q = norm(qv).trim(), toks = q.split(/\s+/).filter(Boolean);
   let rows = ITEMS;
-  if(FLT==='lack') rows = rows.filter(i => i.imgCount < 3);
+  if(FLT==='lack') rows = rows.filter(i => (i.req||0) < 3);
   if(FLT==='none') rows = rows.filter(i => !i.imgCount);
-  if(toks.length){
-    rows = rows.filter(it => toks.every(x => it._k.includes(x)));
-    rows.sort((a,b) => (norm(b.code).startsWith(q)?1:0) - (norm(a.code).startsWith(q)?1:0));
-  }
-  const filtered = toks.length || FLT!=='all';
+  if(FLT==='done') rows = rows.filter(i => (i.req||0) >= 3);
+  const grp = $('grpSel').value;
+  if(grp) rows = rows.filter(i => (i.group||'').trim() === grp);
+  if(toks.length) rows = rows.filter(it => toks.every(x => it._k.includes(x)));
+  const srt = $('sortSel').value || 'code';
+  const cmp = { code:(a,b)=>String(a.code).localeCompare(String(b.code)), name:(a,b)=>String(a.name).localeCompare(String(b.name)),
+    new:(a,b)=>(b.ts||0)-(a.ts||0), less:(a,b)=>a.imgCount-b.imgCount, more:(a,b)=>b.imgCount-a.imgCount }[srt];
+  // xếp hạng độ khớp: trùng mã > mã bắt đầu bằng > mã chứa > tên bắt đầu bằng > tên chứa > (nhóm/model/mô tả)
+  const score = it => { if(!toks.length) return 0; const c = norm(it.code), n = norm(it.name);
+    return c===q ? 6 : c.startsWith(q) ? 5 : c.includes(q) ? 4 : n.startsWith(q) ? 3 : n.includes(q) ? 2 : toks.every(x => c.includes(x)||n.includes(x)) ? 1 : 0; };
+  if(toks.length) rows.forEach(it => it._s = score(it));
+  rows = rows.slice().sort((a,b) => (toks.length && b._s!==a._s) ? b._s-a._s : cmp(a,b));
+  const filtered = toks.length || FLT!=='all' || grp;
   $('listInfo').textContent = ITEMS.length ? (filtered ? t('list_found',{a:rows.length,b:ITEMS.length}) : t('list_total',{n:ITEMS.length})) : '';
   box.innerHTML = '';
   if(!ITEMS.length){ box.innerHTML = `<div class="empty">${ic('box')}<div>${esc(t('list_empty_db'))}</div></div>`; return; }
   if(!rows.length){ box.innerHTML = `<div class="empty">${ic('search')}<div>${esc(t('list_none'))}</div></div>`; return; }
-  rows.slice(0, 300).forEach(it => {
+  const more = $('moreBtn'), left = rows.length - PAGE_N;
+  more.style.display = left > 0 ? 'inline-flex' : 'none';
+  more.textContent = t('more',{n:Math.max(0,left).toLocaleString()});
+  rows.slice(0, PAGE_N).forEach(it => {
     const c = document.createElement('div'); c.className='card'; c.onclick = () => openDetail(it.code);
     const ph = document.createElement('div'); ph.className='ph'; ph.appendChild(driveImg(it.thumb, 400));
-    const cnt = document.createElement('span'); cnt.className = 'cnt'+(it.imgCount<3?' low':''); cnt.innerHTML = ic('image')+it.imgCount; ph.appendChild(cnt);
+    const cnt = document.createElement('span'); cnt.className = 'cnt'+((it.req||0)<3?' low':''); cnt.innerHTML = ic('image')+it.imgCount; ph.appendChild(cnt);
     const tx = document.createElement('div'); tx.className='tx';
     tx.innerHTML = `<div class="code">${esc(it.code)}</div><div class="name">${esc(it.name)}</div>`
       + ((it.group||it.model) ? `<div class="meta">${it.group?`<span class="badge">${esc(it.group)}</span>`:''}${it.model?`<span class="badge">${esc(it.model)}</span>`:''}</div>` : '');
@@ -697,9 +860,15 @@ function renderDetail(it, tr){
         ${cell('d_updated', (it.updated||'')+(it.by?' — '+it.by:''))}
       </div>
       ${it.desc ? `<div class="desc">${esc(V('desc'))}</div>` : ''}
-      <button class="btn block" id="dEdit" style="margin-top:16px">${ic('edit')}${esc(t('d_edit'))}</button>
+      <div class="actrow">
+        <button class="btn" id="dEdit">${ic('edit')}${esc(t('d_edit'))}</button>
+        <button class="btn ghost" id="dShare" title="${esc(t('share'))}">${ic('share')}</button>
+        <button class="btn ghost" id="dQr" title="${esc(t('qr'))}">${ic('qr')}</button>
+      </div>
     </div>`;
   $('dEdit').onclick = () => { closeDetail(); go('v-edit'); loadForEdit(it); };
+  $('dShare').onclick = () => shareItem(it.code, V('name'));
+  $('dQr').onclick = () => openQR(it);
   // thanh dịch tự động
   if(LANG!=='vi'){
     const bar = $('trBar');
@@ -715,7 +884,8 @@ function renderDetail(it, tr){
   const hero = $('dHero'); const himg = document.createElement('img'); hero.appendChild(himg);
   let curIm = imgs[0];
   const setHero = im => { curIm = im; setImg(himg, im.fileId, 1200); document.querySelectorAll('#gal .strip div').forEach(d => d.classList.toggle('sel', d._id===im.id)); };
-  hero.onclick = () => showLB(curIm.fileId, TL(curIm.type)+(note(curIm._i)?' — '+note(curIm._i):'')+(curIm.by?' · '+curIm.by:''));
+  const lbList = imgs.map(im => ({ fileId: im.fileId, cap: TL(im.type)+(note(im._i)?' — '+note(im._i):'')+(im.by?' · '+im.by:'') }));
+  hero.onclick = () => openLB(lbList, imgs.indexOf(curIm));
   const gal = $('gal');
   const h = document.createElement('h4'); h.textContent = t('photos_n',{n:imgs.length});
   const s = document.createElement('div'); s.className='strip';
@@ -729,6 +899,54 @@ function renderDetail(it, tr){
   setHero(imgs[0]);
 }
 function closeDetail(){ $('detail').classList.remove('on'); document.body.style.overflow=''; CUR=null; }
+
+/* =================== CHIA SẺ / QR =================== */
+function itemUrl(code){
+  const onPages = /github\.io$/.test(location.hostname) || location.hostname === 'localhost';
+  return (onPages ? location.origin + location.pathname : PUBLIC_URL) + '?code=' + encodeURIComponent(code);
+}
+async function shareItem(code, name){
+  const url = itemUrl(code);
+  if(navigator.share){ try{ await navigator.share({ title: (name||code), text: code+(name?' — '+name:''), url }); return; }catch(e){ if(e && e.name==='AbortError') return; } }
+  try{ await navigator.clipboard.writeText(url); toast(t('copied')); }
+  catch(e){ window.prompt(t('copy_manual'), url); }
+}
+async function openQR(it){
+  QR_CODE = it.code;
+  const box = $('qrLabel'); box.innerHTML = '<span class="spin"></span>';
+  $('qrModal').classList.add('on');
+  try{
+    if(!window.qrcode) await loadScript(QRLIB);
+    const qr = qrcode(0, 'M'); qr.addData(itemUrl(it.code)); qr.make();
+    box.innerHTML = qr.createSvgTag({ cellSize:4, margin:0, scalable:true })
+      + `<div class="ql-t"><div class="code">${esc(it.code)}</div><div class="nm">${esc(it.name)}</div><div class="sm">${esc(t('app'))}</div></div>`;
+  }catch(e){ box.textContent = t('err')+errMsg(e); }
+}
+
+/* =================== ADMIN: XUẤT EXCEL / NHẬT KÝ =================== */
+async function exportExcel(){
+  try{
+    if(!window.XLSX) await loadScript(SHEETJS);
+    const rows = ITEMS.map(i => ({ [t('d_code')]: i.code, [t('d_name')]: i.name, [t('d_group')]: i.group||'', [t('d_model')]: i.model||'',
+      [t('d_unit')]: i.unit||'', [t('xl_imgs')]: i.imgCount, [t('xl_req')]: (i.req||0)>=3 ? '✔' : '', Link: itemUrl(i.code) }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [{wch:16},{wch:50},{wch:16},{wch:18},{wch:8},{wch:8},{wch:10},{wch:60}];
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'ThuVienAnh');
+    const d = new Date(), p = n => String(n).padStart(2,'0');
+    XLSX.writeFile(wb, `Thu_vien_anh_${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}.xlsx`);
+    toast(t('exp_done',{n:rows.length}));
+  }catch(e){ toast(t('err')+errMsg(e)); }
+}
+async function openLog(){
+  const body = $('logBody'); body.innerHTML = '<div class="empty"><span class="spin"></span></div>';
+  $('logModal').classList.add('on');
+  try{
+    const list = await run('getLog', ADMIN, 150);
+    body.innerHTML = list.length ? '<ul class="logl">' + list.map(l => `<li><span class="tm">${esc(l.at)}</span>
+      <span class="ac"><b>${esc(l.user)}</b> · ${esc(l.action.replace(/\b(SERIAL|TONGQUAN|CHITIET|KHAC)\b/g, m => TL(m).toLowerCase()))} ${l.code?`<span class="code">${esc(l.code)}</span>`:''}${l.detail?`<div class="muted">${esc(l.detail)}</div>`:''}</span></li>`).join('') + '</ul>'
+      : `<div class="empty">${esc(t('log_empty'))}</div>`;
+  }catch(e){ body.innerHTML = `<div class="banner warn">${ic('alert')}<span>${esc(t('err')+errMsg(e))}</span></div>`; }
+}
 
 /* =================== ẢNH: CHỌN / NÉN =================== */
 function pick(target, camera){ pickTarget = target; const inp = camera ? $('fileCam') : $('filePick'); inp.value=''; inp.click(); }
@@ -815,7 +1033,7 @@ async function searchByPhoto(file){
       const sc = document.createElement('div'); sc.className='sc'; sc.style.color=col; sc.textContent = pct+'%';
       d.append(ph, tx, sc); out.appendChild(d);
     });
-  }catch(e){ st.textContent = t('err')+errMsg(e); }
+  }catch(e){ st.textContent = /Cannot load|fetch|network|Failed/i.test(errMsg(e)) ? t('model_fail') : t('err')+errMsg(e); }
 }
 async function refreshEmbInfo(){
   try{
@@ -1031,6 +1249,14 @@ function renderExisting(){
     const lb = document.createElement('div'); lb.className='lb2'; lb.textContent = TL(im.type)+(im.note?' · '+im.note:''); d.appendChild(lb);
     d.onclick = () => showLB(im.fileId, TL(im.type)+(im.note?' — '+im.note:''));
     if(ADMIN){
+      const sel = document.createElement('select');
+      sel.innerHTML = ['SERIAL','TONGQUAN','CHITIET','KHAC'].map(k => `<option value="${k}" ${k===im.type?'selected':''}>${esc(TL(k))}</option>`).join('');
+      sel.onclick = e => e.stopPropagation();
+      sel.onchange = async () => {
+        try{ await run('updateImage', im.id, sel.value, im.note||'', ADMIN); im.type = sel.value; renderExisting(); renderPhotos(); toast(t('type_changed')); reloadItems(); }
+        catch(e){ toast(errMsg(e)); sel.value = im.type; }
+      };
+      d.appendChild(sel);
       const x = document.createElement('button'); x.className='x'; x.innerHTML=ic('x');
       x.onclick = async ev => {
         ev.stopPropagation();
@@ -1084,6 +1310,7 @@ function renderPhotos(){
 }
 function typeOk(x){ return ED.existing.some(e=>e.type===x) || !!ED.slots[x] || ED.extras.some(p=>p.type===x); }
 function renderChecks(){
+  if(REQUIRED.every(typeOk) && /^(Còn thiếu|Missing|Foto ki manke)/.test($('toast').textContent)) $('toast').style.display='none';
   $('checks').innerHTML = REQUIRED.map(x => `<span class="badge ${typeOk(x)?'green':'red'}">${ic(typeOk(x)?'check':'x')}${esc(TL(x))}</span>`).join('')
     + `<span class="badge">${esc(t('photos_count',{a:totalPhotos(),b:CONF.maxImages}))}</span>`;
 }
@@ -1109,7 +1336,9 @@ async function save(){
       msg.innerHTML = '<span class="spin"></span> '+esc(t('uploading',{a:i+1,b:photos.length}));
       const emb = await Promise.race([p.embP, new Promise(res => setTimeout(() => res(''), 30000))]) || '';
       if(!emb) noEmb++;
-      await run('uploadImage', { code:r.code, type:p.type, note:p.note, base64:p.dataUrl, mime:'image/jpeg', embedding:emb, user:data.user });
+      const payload = { code:r.code, type:p.type, note:p.note, base64:p.dataUrl, mime:'image/jpeg', embedding:emb, user:data.user };
+      try{ await run('uploadImage', payload); }
+      catch(e1){ await new Promise(res => setTimeout(res, 1500)); await run('uploadImage', payload); }   // thử lại 1 lần khi mạng chập chờn
       p.uploaded = true; sent++;
       bar.style.width = Math.round((i+1)/Math.max(photos.length,1)*100)+'%';
     }
@@ -1137,7 +1366,11 @@ async function save(){
   // hiện ngay danh sách lần trước (lưu trên máy), rồi cập nhật bản mới ở nền
   let cached = null; try{ cached = JSON.parse(localStorage.getItem('items_cache')||'null'); }catch(e){}
   if(cached && cached.length) setItems(cached); else renderList();
-  run('getConfig').then(c => { CONF = c; renderPhotos(); }).catch(()=>{});
+  const sp = store('sort'); if(sp) $('sortSel').value = sp;
+  run('getConfig').then(c => { CONF = c; if(c.version) $('ver').textContent = c.version; renderPhotos(); }).catch(()=>{});
+  // mở thẳng 1 mã từ link chia sẻ / mã QR: ?code=XXX
+  const dl = new URLSearchParams(location.search).get('code');
+  if(dl) openDetail(dl);
   await reloadItems();
 })();
 </script>
